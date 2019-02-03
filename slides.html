@@ -1,0 +1,2001 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="copyright" content="Timothy Pratley"><title>Enterprise Clojure Training</title><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport"><link href="reveal.js/css/reveal.css" rel="stylesheet"><link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"><link href="reveal.js/lib/css/zenburn.css" rel="stylesheet"><script>var link = document.createElement( 'link' );
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = window.location.search.match( /print-pdf/gi ) ? "reveal.js/css/print/pdf.css" : "reveal.js/css/print/paper.css";
+document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="reveal.js/lib/js/html5shiv.js"></script><![endif]--><link rel="shortcut icon" type="image/x-icon" href="img/clojure-logo-icon-32.png"><link rel="stylesheet" href="slides.css"></head><body><div class="reveal"><div class="slides"><section id="enterprise_clojure_training" data-state="title"><h2>Enterprise Clojure Training</h2><div class="paragraph"><p><span class="image"><img src="img/corgi.jpg" alt="corgi"></span></p></div></section>
+<section id="contents" data-state="title"><h2>Contents</h2><table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/the_clojure_ecosystem">Ecosystem</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/clojure_syntax">Syntax</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/functions">Functions</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/testing_with_clojure_test">Testing</a></p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/control_flow">Control Flow</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/functional_programming">Functional Programming</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/java_interop">Java Interop</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/parallel_programming_and_concurrency">Concurrency</a></p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/polymorphism_and_types">Polymorphism</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/interacting_with_a_database">Databases</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/spec">Spec</a></p></td><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/macros">Macros</a></p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#/further_reading">Further reading</a></p></td><td class="tableblock halign-left valign-top"></td><td class="tableblock halign-left valign-top"></td><td class="tableblock halign-left valign-top"></td></tr></table></section>
+<section id="introductions" data-state="title"><h2>Introductions</h2><div class="paragraph"><p><span class="image"><img src="img/art1.jpg" alt="art1"></span></p></div></section>
+<section id="clojure" data-state="title"><h2>Clojure</h2><div class="paragraph"><p><span class="image"><img src="img/clojure-logo.png" alt="clojure logo"></span></p></div>
+<div class="quoteblock"><blockquote>What language is it that meets all the criteria? What language would I choose if I had to choose today? Probably Clojure!</blockquote><div class="attribution">&#8212; Robert Martin</div></div></section>
+<section id="clojure_2"><h2>Clojure</h2><div class="ulist"><ul><li><p>Data</p></li><li><p>Functions</p></li><li><p>A tool for thought</p></li><li><p>Getting stuff done</p></li></ul></div></section>
+<section id="the_clojure_ecosystem" data-state="title"><h2>1. The Clojure Ecosystem</h2><div class="paragraph"><p><span class="image"><img src="img/ecosystem.jpg" alt="ecosystem"></span></p></div>
+<div class="quoteblock"><blockquote>Integrity is an ecosystem.</blockquote><div class="attribution">&#8212; Michael Leunig</div></div>
+<aside class="notes"><div class="paragraph"><p>Benefits of embracing the JVM as a host</p></div></aside></section>
+<section id="dependencies"><h2>Dependencies</h2><div class="ulist"><ul><li><p>Libraries are plain old jars</p></li><li><p>Clojure is itself a jar</p></li><li><p>Clojure can make direct use of other jars</p></li><li><p>Easy to deploy</p></li><li><p>Leiningen</p></li></ul></div></section>
+<section id="leiningen"><h2>Leiningen</h2><div class="literalblock"><div class="content"><pre>lein new training
+cd training
+tree
+cat project.clj
+cat src/training/core.clj</pre></div></div></section>
+<section id="tree"><h2>tree</h2><div class="literalblock"><div class="content"><pre>.
+├── CHANGELOG.md
+├── doc
+│   └── intro.md
+├── LICENSE
+├── project.clj
+├── README.md
+├── resources
+├── src
+│   └── training
+│       └── core.clj
+└── test
+    └── training
+        └── core_test.clj</pre></div></div></section>
+<section id="project_clj"><h2>project.clj</h2><div class="literalblock"><div class="content"><pre>(defproject training "0.1.0-SNAPSHOT"
+  :description "FIXME: write description"
+  :url "http://example.com/FIXME"
+  :license
+  {:name "Eclipse Public License"
+   :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :dependencies [[org.clojure/clojure "1.8.0"]])</pre></div></div></section>
+<section id="srctrainingcore_clj"><h2>src/training/core.clj</h2><div class="listingblock"><div class="content"><pre class="highlight"><code>(ns training.core)
+
+(defn foo
+  "I don't do a whole lot."
+  [x]
+  (println x "Hello, World!"))</code></pre></div></div></section>
+<section id="the_read_eval_print_loop_repl"><h2>The Read Eval Print Loop (REPL)</h2><div class="literalblock"><div class="content"><pre>$ lein repl</pre></div></div>
+<div class="paragraph"><p>We type in an expression:</p></div>
+<div class="literalblock"><div class="content"><pre>(+ 1 2)</pre></div></div>
+<div class="paragraph"><p>Clojure returns a result:</p></div>
+<div class="literalblock"><div class="content"><pre>=&gt; 3</pre></div></div>
+<div class="paragraph"><p>Repeat</p></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content"><code>&#8658;</code> means evaluates to</td></tr></table></div>
+<aside class="notes"><div class="ulist"><ul><li><p>evaluates</p></li><li><p>compiles</p></li><li><p>change program definitions on the fly</p></li><li><p>try things</p></li><li><p>answer questions</p></li></ul></div></aside></section>
+<section id="editor_setup"><h2>Editor setup</h2><div class="ulist"><ul><li><p>IntelliJ IDEA + Cursive</p></li><li><p>Wide range of editor support options</p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p><a href="https://www.jetbrains.com/idea" class="bare">https://www.jetbrains.com/idea</a></p></li><li><p><a href="https://cursive-ide.com" class="bare">https://cursive-ide.com</a></p></li><li><p>Focus on Clojure first, editors later</p></li></ul></div></aside></section>
+<section id="exercises"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 1</p></div></section>
+<section id="answers"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(+ 2 3)
+=&gt; 5</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(* 31 79)
+=&gt; 2449</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(/ 10 2)
+=&gt; 5</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(/ 2 10)
+=&gt; 1/5</pre></div></div></section>
+<section id="answers_2"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(+ 1 2 3)
+=&gt; 6</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(println "hello world")
+=&gt; "hello world"</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(* 5 4 3 2 1)
+=&gt; 120</pre></div></div></section>
+<section id="clojure_syntax" data-state="title"><h2>2. Clojure Syntax</h2><div class="paragraph"><p><span class="image"><img src="img/syntax.png" alt="syntax"></span></p></div>
+<div class="quoteblock"><blockquote>If the syntax is good enough for the information, it should be good enough for the meta-information.</blockquote><div class="attribution">&#8212; Erik Naggum</div></div></section>
+<section><table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:50%"><col style="width:50%"></colgroup><thead><tr><th class="tableblock halign-left valign-top">Java</th><th class="tableblock halign-left valign-top">Clojure</th></tr><tbody><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>int i = 5;</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>(def i 5)</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>if (x == 1)
+  return y;
+else
+  return z;</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>(if (= x 1)
+  y
+  z)</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>x * y * z;</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>(* x y z)</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>foo(x, y, z);</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>(foo x y z)</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>foo.bar(x);</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>(.bar foo x)</pre></div></td></tr></table>
+<aside class="notes"><div class="paragraph"><p>Syntax Summary:</p></div>
+<div class="ulist"><ul><li><p>Lisp is an acronym for "list processing", everything is a list!</p></li><li><p>Operation appears at the front of the list, followed by arguments</p></li></ul></div></aside></section>
+<section id="lists"><h2>Lists</h2><div class="paragraph"><p>Evaluated as function calls</p></div>
+<div class="literalblock"><div class="content"><pre>(inc 1)
+=&gt; 2</pre></div></div></section>
+<section id="invoking_functions"><h2>Invoking functions</h2><div class="literalblock"><div class="content"><pre>(+ 1 2)
+=&gt; 3</pre></div></div>
+<div class="paragraph"><p>Always in prefix form</p></div></section>
+<section id="empty_list"><h2>Empty list</h2><div class="literalblock"><div class="content"><pre>()
+=&gt; ()</pre></div></div></section>
+<section id="making_lists"><h2>Making lists</h2><div class="literalblock"><div class="content"><pre>(cons 1 ())
+=&gt; (1)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(cons 1 (cons 2 ())
+=&gt; (1 2)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(list 1 2 3)
+=&gt; (1 2 3)</pre></div></div></section>
+<section id="vectors"><h2>Vectors</h2><div class="literalblock"><div class="content"><pre>[1 2 3 4]</pre></div></div>
+<div class="paragraph"><p>Preferred over lists; easier to write</p></div>
+<div class="paragraph"><p>Order 1 count and lookup by index</p></div>
+<div class="literalblock"><div class="content"><pre>(get [1 2 3 4 5] 3)
+=&gt; 4</pre></div></div>
+<div class="paragraph"><p>Similar to arrays, but can be added to</p></div></section>
+<section id="vector_operations"><h2>Vector operations</h2><div class="literalblock"><div class="content"><pre>(conj [1 2 3] 4)
+=&gt; [1 2 3 4]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(pop [1 2 3 4])
+=&gt; [1 2 3]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(assoc [1 2 3 4] 0 5)
+=&gt; [5 2 3 4]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(vec (list 1 2 3 4))
+=&gt; [1 2 3 4]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(cons 5 [1 2 3 4])
+=&gt; (5 1 2 3 4)</pre></div></div></section>
+<section id="equality_by_value"><h2>Equality by value</h2><div class="literalblock"><div class="content"><pre>(def a [1 2 3 4])
+(= a a)
+=&gt; true</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(def b [1 2 3 4])
+(= a b)
+=&gt; true</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content"><code>a</code> and <code>b</code> are different objects</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>(identical? a b)
+=&gt; false</pre></div></div></section>
+<section id="sequential_equality"><h2>Sequential equality</h2><div class="literalblock"><div class="content"><pre>(= [1 2 3 4] (list 1 2 3 4))
+=&gt; true</pre></div></div>
+<div class="paragraph"><p>Different types, but considered equal</p></div></section>
+<section id="symbols"><h2>Symbols</h2><div class="ulist"><ul><li><p>Usually <code>lowercase-words-hyphenated</code></p></li><li><p>Begin with an alphabet character</p></li><li><p>Can contain numbers and punctuation</p></li><li><p>Identifiers</p></li></ul></div></section>
+<section id="resolving_symbols"><h2>Resolving symbols</h2><div class="literalblock"><div class="content"><pre>inc
+=&gt; #object[clojure.core$inc]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>foo
+=&gt; Exception: Unable to resolve symbol foo</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(quote foo)
+=&gt; foo</pre></div></div>
+<div class="literalblock"><div class="content"><pre>'foo
+=&gt; foo</pre></div></div>
+<div class="paragraph"><p><code>quote</code> means don&#8217;t resolve or evaluate</p></div></section>
+<section id="quote_also_works_on_lists"><h2>Quote also works on lists</h2><div class="literalblock"><div class="content"><pre>(quote (1 2))
+=&gt; (1 2)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>'(1 2)
+=&gt; (1 2)</pre></div></div>
+<div class="paragraph"><p>Prevents invoking <code>1</code> as a function</p></div>
+<div class="literalblock"><div class="content"><pre>(1 2)
+Exception: Long cannot be cast to IFn</pre></div></div></section>
+<section><table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:50%"><col style="width:50%"></colgroup><thead><tr><th class="tableblock halign-left valign-top">Type</th><th class="tableblock halign-left valign-top">Value</th></tr><tbody><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>Long</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>1</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>Double</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>3.14</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>BigInteger</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>1000000000000N</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>BigDecimal</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>1000000000000.1M</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>Exponents</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>1e3</pre></div></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>Ratio</pre></div></td><td class="tableblock halign-left valign-top"><div class="literal"><pre>2/5</pre></div></td></tr></table>
+<aside class="notes"><div class="ulist"><ul><li><p>Representing Numbers</p></li><li><p>Automatically promoted on overflow only when using *' now</p></li></ul></div></aside></section>
+<section id="strings_and_characters"><h2>Strings and characters</h2><div class="literalblock"><div class="content"><pre>"This is a string."</pre></div></div>
+<div class="paragraph"><p>Characters written with a backslash</p></div>
+<div class="literalblock"><div class="content"><pre>\a \b \c
+\newline \tab \space</pre></div></div></section>
+<section id="maps"><h2>Maps</h2><div class="literalblock"><div class="content"><pre>{"name" "Fate of the Furious"
+ "sequence-number" 8
+ "rotten-tomatoes" 0.66
+ "imdb" 0.67}</pre></div></div>
+<div class="ulist"><ul><li><p>Order 1 lookup, "add", "delete" by key</p></li><li><p>Tuned to be fast</p></li><li><p>Replacement for structs/objects</p></li><li><p>Versatile; used often in Clojure code</p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p>There are fancier "versions" of maps in Clojure (records) to handle cases where you want faster Java interop or a strongly-typed name</p></li><li><p>Records still "behave like a map" (implement the map interface)</p></li><li><p>Maps are used instead of named function/method arguments in other languages</p></li><li><p>Maps are used instead of value classes (immutable classes to hold data, impt for concurrent programming) because they are immutable</p></li><li><p>For people from other languages, same as: dictionary (Python), hash (Ruby), object (JS), associative array (Perl)</p></li></ul></div></aside></section>
+<section id="keywords"><h2>Keywords</h2><div class="ulist"><ul><li><p><code>:my-keyword</code></p></li><li><p>Shorthand identifiers</p></li><li><p>Begin with a colon</p></li><li><p><strong>Often used as keys in hashmaps</strong></p></li></ul></div>
+<div class="openblock"><div class="content"><div class="literalblock"><div class="content"><pre>{:name "Fate of the Furious"
+ :sequence-number 8
+ :rotten-tomatoes 0.66
+ :imdb 0.67}</pre></div></div></div></div></section>
+<section id="map_operations"><h2>Map operations</h2><div class="literalblock"><div class="content"><pre>(get {:a 1} :a)
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(get {:a 1} :b 2)
+=&gt; 2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(assoc {:a 1} :b 2)
+=&gt; {:a 1, :b 2}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(dissoc {:a 1} :a)
+=&gt; {}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(merge {:a 1} {:b 2})
+=&gt; {:a 1, :b 2}</pre></div></div></section>
+<section id="commas"><h2>Commas</h2><div class="paragraph"><p>Commas are optional and treated as whitespace</p></div>
+<div class="literalblock"><div class="content"><pre>(= {:a 1, :b 2, :c 3}
+   {:a 1 :b 2 :c 3})</pre></div></div>
+<div class="paragraph"><p>Prefer newlines</p></div>
+<div class="literalblock"><div class="content"><pre>{:a 1
+ :b 2
+ :c 3}</pre></div></div></section>
+<section id="nesting_datastructures"><h2>Nesting datastructures</h2><div class="literalblock"><div class="content"><pre>{:name "Fate of the Furious"
+ :sequence-number 8
+ :ratings {:rotten-tomatoes 0.66
+           :imdb 0.67}}</pre></div></div>
+<div class="paragraph"><p>Ratings are a nested map</p></div>
+<div class="literalblock"><div class="content"><pre>{[1 2] {:name "diamond", :type :treasure}
+ [3 4] {:name "dragon", :type :monster}}</pre></div></div>
+<div class="paragraph"><p>A map with vector coordinate keys, and map values</p></div></section>
+<section id="nested_updates"><h2>Nested updates</h2><div class="literalblock"><div class="content"><pre>(update {:a 2} :a inc)
+=&gt; {:a 3}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(update {:a [1 2 3]} :a conj 4)
+=&gt; {:a [1 2 3 4]}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(assoc-in {:a {:b {:c 1}}} :d 2)
+=&gt; {:a {:b {:c 1, :d 2}}}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(update-in {:a {:b {:c 1}}} [:a :b :c] inc)
+=&gt; {:a {:b {:c 2}}}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(get-in {:a {:b {:c 1}}} [:a :b :c])</pre></div></div></section>
+<section id="sets"><h2>Sets</h2><div class="literalblock"><div class="content"><pre>#{1 2 3}</pre></div></div>
+<div class="paragraph"><p>Near constant time lookup</p></div>
+<div class="literalblock"><div class="content"><pre>(contains? #{1 2 3} 3)
+=&gt; true</pre></div></div></section>
+<section id="set_operations"><h2>Set operations</h2><div class="literalblock"><div class="content"><pre>(conj #{1 2 3} 4)
+=&gt; #{1 2 3 4}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(disj #{1 2 3} 2)
+=&gt; #{1 3}</pre></div></div>
+<div class="paragraph"><p><code>union</code>, <code>difference</code> and <code>intersection</code> are available in the <code>clojure.set</code> namespace</p></div></section>
+<section id="namespaces"><h2>Namespaces</h2><div class="paragraph"><p><code>src/training/my_namespace.clj</code></p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.my-namespace
+  (:require [clojure.set :as set])
+  (:import (java.time Instant Duration)))
+(set/union #{1 2 3} #{3 4})
+=&gt; #{1 2 3 4}</pre></div></div>
+<div class="ulist"><ul><li><p>The name must match path and filename</p></li><li><p><code>my-namespace</code> &#8594; <code>my_namespace.clj</code></p></li><li><p><code>training.</code> &#8594; <code>training/</code></p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Must be the first form in the file</p></li><li><p>Other forms exist, but prefer this one</p></li></ul></div></aside></section>
+<section id="from_the_repl"><h2>From the REPL</h2><div class="literalblock"><div class="content"><pre>(require '[clojure.set :as set])
+(import
+(use 'clojure.set)
+(require '[clojure.set :refer :all])</pre></div></div>
+<div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">Avoid <code>use</code> and <code>:refer :all</code></td></tr></table></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content"><code>ns</code> works in the REPL!</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>(ns training.my-namespace
+   (:require [clojure.set :as set]))</pre></div></div></section>
+<section id="programs"><h2>Programs</h2><div class="ulist"><ul><li><p>Expressions which are evaluated to results</p></li><li><p>If an expression needs to be compiled, it will be</p></li><li><p>Can be loaded from files or evaluated dynamically</p></li><li><p>Unit of compilation is a form</p></li><li><p>Nominate an entry point namespace/function</p></li></ul></div></section>
+<section id="namespaced_keywords"><h2>Namespaced keywords</h2><div class="literalblock"><div class="content"><pre>:my.namespace/rect</pre></div></div>
+<div class="literalblock"><div class="content"><pre>::rect
+=&gt; :my.namespace/rect</pre></div></div>
+<div class="paragraph"><p><code>::</code> is shorthand for current namespace</p></div></section>
+<section id="defining_functions"><h2>Defining functions</h2><div class="literalblock"><div class="content"><pre>(defn square [x]
+  (* x x))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defn square
+  "Multiplies a number by itself"
+  [x]
+  (* x x))</pre></div></div></section>
+<section id="defining_vars"><h2>Defining Vars</h2><div class="literalblock"><div class="content"><pre>(def x 1)
+=&gt; #'user/x</pre></div></div>
+<div class="paragraph"><p><code>#'user/x</code> is shorthand for <code>(var user/x)</code></p></div>
+<div class="literalblock"><div class="content"><pre>x
+=&gt; 1</pre></div></div>
+<div class="ulist"><ul><li><p>Global mutable reference</p></li><li><p>Use sparingly</p></li></ul></div></section>
+<section id="defining_vars_continued"><h2>Defining Vars continued</h2><div class="ulist"><ul><li><p>The symbol <code>x</code> resolves to a Var</p></li><li><p>Vars are automatically dereferenced when evaluated</p></li><li><p>Dereferrencing returns the value associated with the Var</p></li><li><p>Avoid using vars like variables</p></li><li><p><code>defn</code> is actually <code>def</code> with a function value</p></li><li><p>Can use <code>#'x</code> or <code>(var x)</code> to access the Var</p></li></ul></div></section>
+<section id="let"><h2>Let</h2><div class="literalblock"><div class="content"><pre>(let [x 1]
+  (inc x))
+=&gt; 2</pre></div></div>
+<div class="ulist"><ul><li><p>Bind symbols to values in a scope</p></li><li><p>Shadow existing bindings</p></li><li><p>Prefer <code>let</code> over <code>def</code></p></li></ul></div></section>
+<section id="destructuring_binding_forms"><h2>Destructuring (binding forms)</h2><div class="literalblock"><div class="content"><pre>(let [[x y] [1 2]]
+  (+ x y))
+=&gt; 3</pre></div></div>
+<div class="ulist"><ul><li><p>Literal data structure containing symbols</p></li><li><p>Matches structure</p></li></ul></div></section>
+<section id="why_destructure"><h2>Why destructure?</h2><div class="literalblock"><div class="content"><pre>(defn normalize1 [v]
+  (let [x (first v)
+        y (second v)
+        length (Math/sqrt (+ (* x x) (* y y)))]
+    [(/ x length) (/ y length)]))</pre></div></div>
+<div class="paragraph"><p>Avoid extracting substructure manually:</p></div>
+<div class="literalblock"><div class="content"><pre>(defn normalize2 [[x y]]
+  (let [length (Math/sqrt (+ (* x x) (* y y)))]
+    [(/ x length) (/ y length)]))</pre></div></div></section>
+<section id="vector_structures_match_any_sequence"><h2>Vector structures match any sequence</h2><div class="literalblock"><div class="content"><pre>(let [[a b] (list 1 2)]
+  b)
+=&gt; 2</pre></div></div></section>
+<section id="strings_and_collections_list_vector_set_map_implement_seq"><h2>Strings and Collections (list, vector, set, map) implement seq</h2><div class="literalblock"><div class="content"><pre>(seq "abc")
+=&gt; (\a \b \c)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(seq {:a 1, :b 2, :c 3})
+=&gt; ([:a 1] [:b 2] [:c 3])</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(seq? 8)
+=&gt; false</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [[a b] "abc"]
+  b)
+=&gt; \b</pre></div></div></section>
+<section id="basic_sequences"><h2>Basic sequences</h2><div class="literalblock"><div class="content"><pre>(drop 2 [0 0 0 0])
+=&gt; (0 0)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(range 5)
+=&gt; (0 1 2 3 4)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(take 2 "abcd")
+=&gt; (\a \b)</pre></div></div>
+<div class="ulist"><ul><li><p>Many sequence oriented functions</p></li><li><p>Never modify the original sequence</p></li><li><p>Often lazy</p></li></ul></div></section>
+<section id="lazy_sequences"><h2>Lazy sequences</h2><div class="paragraph"><p>Lazy means that the next value in the sequence is only calculated when it is made use of</p></div>
+<div class="paragraph"><p>Stream abstraction; only the currently used item needs to be in memory</p></div>
+<div class="paragraph"><p>Useful for processing files that don&#8217;t fit in memory</p></div></section>
+<section id="for_expressions"><h2>For expressions</h2><div class="literalblock"><div class="content"><pre>(for [i (range 10)]
+  (* i i))
+=&gt; (0 1 4 9 16 25 36 49 64 81)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(for [file ["a" "b" "c" "d"]
+      rank (range 1 9)]
+  (str file rank))
+=&gt; ("a1" "a2" ... "a8" "b1" ... "d8")</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(for [i (range 10)
+      :when (odd? i)
+      :let [square (* i i)]
+  square)
+=&gt; (1 9 25 49 81)</pre></div></div></section>
+<section id="destructuring_in_a_for_expression"><h2>Destructuring in a for expression</h2><div class="literalblock"><div class="content"><pre>(let [m {:a 1, :b 2, :c 3}]
+  (for [[k v] m]
+    [v k]))
+=&gt; ([1 :a] [2 :b] [3 :c])</pre></div></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content">Destructuring is available in any binding form</td></tr></table></div></section>
+<section id="variadic_functions_using"><h2>Variadic functions using <code>&amp;</code></h2><div class="literalblock"><div class="content"><pre>(defn sub [&amp; vs]
+  vs)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(sub 1 2 3 4)
+=&gt; (1 2 3 4)</pre></div></div>
+<div class="ulist"><ul><li><p>Variadic means variable number of arguments</p></li><li><p>Arity means number of arguments</p></li><li><p>We could have just passed a vector instead</p></li></ul></div></section>
+<section id="apply"><h2>Apply</h2><div class="ulist"><ul><li><p>Calls a function with a sequence of arguments</p><div class="literalblock"><div class="content"><pre>(apply + [1 2 3 4])
+=&gt; 10</pre></div></div></li><li><p>Most mathematical functions are variadic:</p><div class="literalblock"><div class="content"><pre>(+ 1 2 3)
+=&gt; 6</pre></div></div></li></ul></div></section>
+<section id="destructuring_a_map"><h2>Destructuring a map</h2><div class="literalblock"><div class="content"><pre>(def x {:a 10
+        :b 20})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [{a :a, b :b} x]
+  (+ a b))
+=&gt; 30</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [{:keys [a b]} x]
+  (+ a b))
+=&gt; 30</pre></div></div></section>
+<section id="destructuring_strings_from_a_map"><h2>Destructuring strings from a map</h2><div class="literalblock"><div class="content"><pre>(def y {"a" 10
+        "b" 20})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [{a "a", b "b"} y]
+  (+ a b))
+=&gt; 30</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [{:strs [a b]} y]
+  (+ a b))
+=&gt; 30</pre></div></div></section>
+<section id="destructuring_a_sequence"><h2>Destructuring a sequence:</h2><div class="literalblock"><div class="content"><pre>(def x (range 5))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(first x)
+=&gt; 0</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(rest x)
+=&gt; (1 2 3 4)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [[a &amp; more] (range 5)]
+  a)
+=&gt; 0</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [[a &amp; more] (range 5)]
+  more)
+=&gt; (1 2 3 4)</pre></div></div></section>
+<section id="nested_destructuring"><h2>Nested destructuring</h2><div class="literalblock"><div class="content"><pre>(def movie {:name "Fate of the Furious"
+            :sequence-number 8
+            :ratings {:rotten-tomatoes 0.66
+                      :imdb 0.67}})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(get-in movie [:ratings :imdb])
+=&gt; 0.67</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [{{:keys [imdb]} :ratings} movie]
+  imdb)
+=&gt; 0.67</pre></div></div></section>
+<section id="more_destructuring"><h2>More destructuring</h2><div class="literalblock"><div class="content"><pre>(defn f [{:keys [a b] :as x}]
+  x)
+(f {})
+=&gt; {}</pre></div></div></section>
+<section id="destructuring_with_defaults"><h2>Destructuring with defaults</h2><div class="literalblock"><div class="content"><pre>(defn f [{:keys [a b] :or {a "default"}}]
+  a)
+(f {})
+=&gt; "default"</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defn f [x]
+  (let [defaults {:a "default"}]
+        {:keys [a b]} (merge defaults x)]
+    a))
+(f {})
+=&gt; "default"</pre></div></div></section>
+<section id="comments"><h2>Comments</h2><div class="paragraph"><p>Anything following a semicolon is a comment</p></div>
+<div class="literalblock"><div class="content"><pre>; this is an inline comment
+;; this is a function level comment</pre></div></div>
+<div class="paragraph"><p>Less common is the comment form:</p></div>
+<div class="literalblock"><div class="content"><pre>(comment anything)</pre></div></div></section>
+<section id="bug_eye_comments"><h2>Bug eye comments</h2><div class="paragraph"><p>Removal of next form <code>#_</code></p></div>
+<div class="literalblock"><div class="content"><pre>#_(this form is removed)
+#_#_ (ignored-1) (ignored-2)</pre></div></div>
+<div class="ulist"><ul><li><p>Temporarily remove a form when debugging code</p></li><li><p>Looks like a bug eyes emoji</p></li></ul></div></section>
+<section id="regex"><h2>Regex</h2><div class="literalblock"><div class="content"><pre>#"pattern"</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(re-seq #"\w+" "the quick brown fox")
+=&gt; ("the" "quick" "brown" "fox")</pre></div></div></section>
+<section id="exercises_2"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 2</p></div></section>
+<section id="answers_3"><h2>Answers</h2><div class="paragraph"><p>Set up the new namespace called <code>training.syntax</code></p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.syntax)
+=&gt; nil</pre></div></div>
+<div class="paragraph"><p>Define a var called <code>message</code> bound to the string <code>"greetings"</code></p></div>
+<div class="literalblock"><div class="content"><pre>(def message "greetings")
+=&gt; #'hello-clojure/message</pre></div></div></section>
+<section id="answers_4"><h2>Answers</h2><div class="paragraph"><p>Print out the value of the var <code>message</code></p></div>
+<div class="literalblock"><div class="content"><pre>(prn message)
+=&gt; "greetings"
+   nil</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content"><code>prn</code> keeps the quotes around strings; <code>println</code> does not</td></tr></table></div></section>
+<section id="answers_5"><h2>Answers</h2><div class="paragraph"><p>Create a <code>let</code> binding that binds the symbol <code>message</code> to <code>"well hello there"</code>, and prints out <code>message</code> inside the <code>let</code> block:</p></div>
+<div class="literalblock"><div class="content"><pre>(let [message "well hello there"]
+  (prn message))
+=&gt; "well hello there"
+   nil</pre></div></div>
+<div class="paragraph"><p>Print out message again, outside of the <code>let</code> block:</p></div>
+<div class="literalblock"><div class="content"><pre>(prn message)
+=&gt; "greetings"</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content"><code>message</code> global var is still the original value</td></tr></table></div></section>
+<section id="answers_6"><h2>Answers</h2><div class="paragraph"><p>Create a let binding that destructures a map and prints the greeting and tone:</p></div>
+<div class="literalblock"><div class="content"><pre>(def m {:greeting "good morning", :tone "happy"})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [{:keys [greeting tone]} m]
+  (prn greeting tone))
+=&gt; "good morning" "happy"</pre></div></div></section>
+<section id="answers_7"><h2>Answers</h2><div class="paragraph"><p>Destructure a single map input and return a string combining greeting and tone:</p></div>
+<div class="literalblock"><div class="content"><pre>(defn hi [{:keys [greeting tone]}]
+  (str greeting " - " tone))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(hi m)
+=&gt; "good morning - happy"</pre></div></div></section>
+<section id="functions" data-state="title"><h2>3. Functions</h2><div class="paragraph"><p><span class="image"><img src="img/functions.jpg" alt="functions"></span></p></div>
+<div class="quoteblock"><blockquote>The chief function of the body is to carry the brain around.</blockquote><div class="attribution">&#8212; Thomas A. Edison</div></div></section>
+<section id="defining_functions_2"><h2>Defining functions</h2><div class="literalblock"><div class="content"><pre>(defn square [x]
+  (* x x))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defn square
+  "Multiplies a number by itself"
+  [x]
+  (* x x))</pre></div></div></section>
+<section id="functions_continued"><h2>Functions continued</h2><div class="ulist"><ul><li><p>All functions return the last expression as a result</p></li><li><p>Defn creates a var</p><div class="literalblock"><div class="content"><pre>(square 2)
+=&gt; 4</pre></div></div></li><li><p>Mathematical operators in prefix notation</p><div class="literalblock"><div class="content"><pre>(+ (square 2) (square 3))
+=&gt; 13</pre></div></div></li><li><p>Arguments are evaluated from left to right before the function is called</p></li></ul></div></section>
+<section id="unnamed_functions"><h2>Unnamed functions</h2><div class="literalblock"><div class="content"><pre>(fn [a]
+  (inc a))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>#(inc %)</pre></div></div>
+<div class="paragraph"><p>Unnamed; anonymous; Lambda (λ) expression</p></div></section>
+<section id="invoking_anonymous_functions"><h2>Invoking anonymous functions</h2><div class="literalblock"><div class="content"><pre>((fn [a] (inc a)) 1)
+=&gt;2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(#(inc %) 1)
+=&gt; 2</pre></div></div>
+<div class="paragraph"><p>Just like a named function; first item in a list is applied</p></div></section>
+<section id="closure"><h2>Closure</h2><div class="paragraph"><p>Function that captures values from the environment</p></div>
+<div class="literalblock"><div class="content"><pre>(let [who "world"]
+  (defn greet []
+    (str "Hello " who)))
+(greet)
+=&gt; "Hello world"</pre></div></div></section>
+<section id="passing_a_function_to_another_function"><h2>Passing a function to another function</h2><div class="literalblock"><div class="content"><pre>(defn do-triple [f]
+  (f)
+  (f)
+  (f))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(do-triple #(print "hot "))
+=&gt; hot hot hot nil</pre></div></div>
+<div class="ulist"><ul><li><p>Functions are values</p></li><li><p>Can be passed to other functions</p></li><li><p>Functions that take a function are called "higher order functions"</p></li></ul></div></section>
+<section id="mapping_a_function_over_a_sequence"><h2>Mapping a function over a sequence</h2><div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content"><code>map</code> the function, not <code>hash-map</code> the data structure</td></tr></table></div>
+<div class="ulist"><ul><li><p>Function that applies a function to every element in a sequence</p><div class="literalblock"><div class="content"><pre>(map inc [1 2 3])
+=&gt; (2 3 4)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map (fn [x] (* x x)) [1 2 3 4])
+=&gt; (1 4 9 16)</pre></div></div></li><li><p>Don&#8217;t need to create global definitions</p></li></ul></div></section>
+<section id="map"><h2>Map</h2><div class="literalblock"><div class="content"><pre>(defn greet-them [person]
+  (str "Hello " person))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map greet-them ["Alice" "Bob" "Carol"])
+=&gt; ("Hello Alice" "Hello Bob" "Hello Carol")</pre></div></div>
+<div class="ulist"><ul><li><p>Using pre-defined functions is easy and readable</p></li></ul></div></section>
+<section id="map_2"><h2>Map</h2><div class="literalblock"><div class="content"><pre>(let [x 5]
+  (map #(+ x %) [1 2 3]))
+=&gt; (6 7 8)</pre></div></div>
+<div class="ulist"><ul><li><p>Higher order function</p></li><li><p>Closure as argument to higher order function</p></li><li><p>Source of expressiveness</p></li></ul></div></section>
+<section id="inline_named_functions"><h2>Inline named functions</h2><div class="literalblock"><div class="content"><pre>(fn add-one [x]
+  (inc x))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>add-one
+=&gt; Unable to resolve symbol: add-one in this context</pre></div></div>
+<div class="ulist"><ul><li><p>Does not create a global var</p></li><li><p>Documents purpose</p></li><li><p>Name appears in stacktraces (searchable clue)</p></li><li><p>The function can call itself</p></li></ul></div></section>
+<section id="named_functions"><h2>Named functions</h2><div class="literalblock"><div class="content"><pre>(defn f [x]
+  (inc x))</pre></div></div>
+<div class="paragraph"><p>Is shorthand for</p></div>
+<div class="literalblock"><div class="content"><pre>(def f
+  (fn [x]
+    (inc x)))</pre></div></div></section>
+<section id="variadic_arguments"><h2>Variadic arguments</h2><div class="literalblock"><div class="content"><pre>(defn f [&amp; args]
+  args)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(f 1 2 3)
+=&gt; (1 2 3)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(+ 1 2 3 4 5)
+=&gt; 15</pre></div></div></section>
+<section id="variadic_disadvantages"><h2>Variadic disadvantages</h2><div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">Not always convenient</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>(bake-cakes cake1 cake2 cake3)
+(let [cakes (db/find-cakes "delicious")]
+  (apply bake-cakes cakes))</pre></div></div>
+<div class="paragraph"><p>Prefer functions that do one thing</p></div>
+<div class="paragraph"><p>Combine with sequence operations</p></div>
+<div class="literalblock"><div class="content"><pre>(doseq [cake (db/find-cakes "delicious")]
+  (bake-cake cake))</pre></div></div></section>
+<section id="variadic_disadvantages_2"><h2>Variadic disadvantages</h2><div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">Bypasses arity checking</td></tr></table></div>
+<div class="paragraph"><p>Common bad pattern:</p></div>
+<div class="literalblock"><div class="content"><pre>(defn f [x &amp; [y]]
+  (if y
+    (+ x y)
+    (inc x)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(f 1 2 3 4 "not a number")
+=&gt; 3</pre></div></div></section>
+<section id="prefer_explicit_argument_lists"><h2>Prefer explicit argument lists</h2><div class="literalblock"><div class="content"><pre>(defn f
+  ([x] (inc x))
+  ([x y] (+ x y)))</pre></div></div>
+<div class="paragraph"><p>Multiple arities explicitly declared in parenthesis</p></div>
+<div class="literalblock"><div class="content"><pre>(f 1) =&gt; 2
+(f 1 2) =&gt; 3
+(f 1 2 3) =&gt; Exception: Wrong number of args</pre></div></div></section>
+<section id="keyword_arguments"><h2>Keyword arguments</h2><div class="literalblock"><div class="content"><pre>(defn f [&amp; {:keys [port protocol]}]
+  ...)
+(f :protocol "https")</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">Destructure defaults with <code>:or</code></td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>{:keys [port protocol] :or {port 8080, protocol "http"]}</pre></div></div></section>
+<section id="keyword_arguments_2"><h2>Keyword arguments</h2><div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">Inconvenient</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>(def config (edn/read-string (slurp "config.edn")))
+(apply f (apply concat config))</pre></div></div>
+<div class="paragraph"><p>Pass a map instead</p></div>
+<div class="literalblock"><div class="content"><pre>(defn f [{:keys [option1 option2]}]
+  ...)
+(f {:option3 "value"})
+(f config)</pre></div></div></section>
+<section id="pre_and_post_conditions"><h2>Pre and post conditions</h2><div class="literalblock"><div class="content"><pre>(defn f [x]
+  {:pre [(pos? x)]
+   :post [(neg? %) (int? %)]}
+  (- x))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(f 1) =&gt; -1
+(f -1) =&gt; AssertionError Assert failed: (pos? x)
+(f 1.5) =&gt; AssertionError Assert failed: (int? %)</pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Assertions about inputs and outputs of a function</p></li><li><p>Sequence of conditions</p></li></ul></div></aside></section>
+<section id="prepost_drawbacks"><h2>Pre/Post drawbacks:</h2><div class="ulist"><ul><li><p>Syntax is easy to get wrong, no assertion made</p></li><li><p>Assertions can be disabled</p></li><li><p>Less control over error reporting and handling</p></li><li><p>Rarely used</p></li></ul></div></section>
+<section id="more_common"><h2>More common</h2><div class="paragraph"><p>Check for a condition and throw an exception</p></div>
+<div class="literalblock"><div class="content"><pre>(defn f [x]
+  (when-not (pos? x)
+    (throw (ex-info "bad input" {:x x}))
+  (let [result (- x)]
+    (if (and (neg? result) (int? result))
+      result
+      (throw (ex-info "bad result" {:x x})))</pre></div></div>
+<div class="paragraph"><p>Or use spec</p></div></section>
+<section id="function_literals"><h2>Function literals</h2><div class="literalblock"><div class="content"><pre>#(inc %)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>#(+ %1 %2)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>#(apply + %&amp;)</pre></div></div>
+<div class="paragraph"><p>Terse, powerful expressions</p></div></section>
+<section id="compare"><h2>Compare</h2><div class="literalblock"><div class="content"><pre>(map #(* % %) [1 2 3 4])</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map (fn square [x]
+       (* x x))
+     [1 2 3 4])</pre></div></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content"><div class="paragraph"><p>Prefer <code>(fn)</code> form</p></div>
+<div class="ulist"><ul><li><p>Named parameter</p></li><li><p>named purpose</p></li><li><p>stack traces</p></li></ul></div></td></tr></table></div></section>
+<section id="exercises_3"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 3</p></div></section>
+<section id="answers_8"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn square [x]
+  (* x x))
+(square 55)
+=&gt; 3025</pre></div></div></section>
+<section id="answers_9"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn square-of-square [x]
+  (if (&lt; x 100)
+    (square (square x))
+    (throw (ex-info "Input too large" {:x x}))))
+(square-of-square 2)
+=&gt; 16
+(square-of-square 123)
+=&gt; ExceptionInfo Input too large</pre></div></div></section>
+<section id="answers_10"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn fib-step [a b]
+  [b (+ a b)]))
+(fib-step 1 1)
+=&gt; [1 2]
+(fib-step 1 2)
+=&gt; [2 3]
+(fib-step 2 3)
+=&gt; [3 5]</pre></div></div></section>
+<section id="challenge_1_corgi_cover_eligibility"><h2>Challenge 1: Corgi Cover eligibility</h2><div class="paragraph"><p>Insuricorp is about to launch a marketing campaign for a new “corgi cover” policy. Only certain people are eligible to register for “corgi cover”. To be eligible they must own a corgi, live in either Illinois (IL), Washington (WA), New York (NY), or Colorado (CO). You are tasked with building a system to validate applications for the policy.</p></div></section>
+<section id="part_1"><h2>Part 1:</h2><div class="paragraph"><p>Write a function that will take as input a state and corgi-count, and will return a boolean indicating the person&#8217;s eligibility for the “corgi cover” policy.</p></div></section>
+<section id="test_data"><h2>Test data</h2><table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup><thead><tr><th class="tableblock halign-left valign-top">Name</th><th class="tableblock halign-left valign-top">State</th><th class="tableblock halign-left valign-top">Corgi count</th><th class="tableblock halign-left valign-top">Existing policy count</th></tr><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock">Chloe</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">IL</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock">Ethan</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">IL</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock">Annabelle</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">WY</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">19</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock">Logan</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">WA</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td></tr></table></section>
+<section id="part_2"><h2>Part 2:</h2><div class="paragraph"><p>A focus group of corgi owners has revealed that “corgi cover” needs to be offered at 3 different tiers: “corgi cover silver”, “corgi cover gold”, and “corgi cover platinum”. Platinum is available when covering 7 or more corgis OR covering at least 3 corgis and also having one other policy with Insuricorp. Gold is available when covering at least 3 corgis. Silver is the original “corgi cover” policy. Create a new function that takes an additional argument policy-count and returns a keyword indicating their eligibility.</p></div>
+<div class="paragraph"><p>See <code>cond</code></p></div></section>
+<section id="part_3"><h2>Part 3:</h2><div class="paragraph"><p>The “corgi cover” applications Insuricorp collect contain more information than necessary to determine eligibility. Create a new function that takes as input a single map data structure as input instead of multiple inputs. It should pick out the values that it needs from the input map. Create some test data and feed it to your function. The data should look something like:</p></div>
+<div class="literalblock"><div class="content"><pre>{:name "Chloe", :state "IL", :corgi-count 1, :policy-count 0}</pre></div></div></section>
+<section id="part_4"><h2>Part 4:</h2><div class="paragraph"><p>Insuricorp just merged with Megacorp. Platinum level corgi cover is now offered to people with an existing Megacorp policy as well. Because the company is still restructuring, the policy-count input still only contains Insuricorp data. But a new input has been made available to you which is a map of people to policies.</p></div>
+<div class="literalblock"><div class="content"><pre>{"Chloe" ["secure goldfish"]
+ "Ethan" ["cool cats cover" "megasafe"]}</pre></div></div>
+<div class="paragraph"><p>Create a new function that takes as inputs two maps: the application, and the existing policies. It should apply the same logic, but make use of the Megacorp data.</p></div></section>
+<section id="testing_with_clojure_test" data-state="title"><h2>4. Testing with clojure.test</h2><div class="paragraph"><p><span class="image"><img src="img/testing.jpg" alt="testing"></span></p></div>
+<div class="quoteblock"><blockquote>The problem is not that testing is the bottleneck. The problem is that you don’t know what’s in the bottle.</blockquote><div class="attribution">&#8212; Michael Bolton</div></div></section>
+<section id="deftest"><h2>deftest</h2><div class="literalblock"><div class="content"><pre>(ns training.my-namespace-test
+  (:require [clojure.test :refer :all]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest my-test
+  (prn "My test ran"))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(my-test)
+=&gt; "My test ran"
+nil</pre></div></div>
+<div class="paragraph"><p>Tests are functions with no input arguments</p></div></section>
+<section id="defining_tests_with_deftest"><h2>Defining tests with deftest</h2><div class="paragraph"><p>Can define tests in any namespace</p></div>
+<div class="paragraph"><p>Convention: <code><strong>test</strong></code> dir mirrors <code><strong>src</strong></code> dir, append <code><strong>_test</strong></code></p></div>
+<table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:100%"></colgroup><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong>test</strong>/training/my_namespace_test.clj</code></p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong>src</strong>/training/my_namespace.clj</code></p></td></tr></table></section>
+<section id="refer_all"><h2>Refer all</h2><div class="paragraph"><p>Common to refer all symbols from <code>clojure.test</code> for convenience:</p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.my-namespace-test
+  (:require [clojure.test :refer :all]))
+(deftest ...)</pre></div></div>
+<div class="paragraph"><p>vs</p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.my-namespace-test
+  (:require [clojure.test :as test]))
+(test/deftest ...)</pre></div></div></section>
+<section id="running_tests_from_the_repl"><h2>Running tests from the REPL</h2><div class="literalblock"><div class="content"><pre>(run-tests)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>=&gt; "My test ran"
+   Ran 0 tests containing 0 assertions.
+   0 failures, 0 errors.
+   {:test 1, :pass 0, :fail 0, :error 0, :type :summary}</pre></div></div>
+<div class="paragraph"><p>Runs all tests in the current namespace</p></div>
+<div class="paragraph"><p>Or if you want to test specific namespaces:</p></div>
+<div class="literalblock"><div class="content"><pre>(run-tests 'training.my-namespace
+           'training.other-namespace)</pre></div></div></section>
+<section id="command_line_testing"><h2>Command line testing</h2><div class="literalblock"><div class="content"><pre>$ lein test</pre></div></div>
+<div class="literalblock"><div class="content"><pre>=&gt; "My test ran"
+   Ran 0 tests containing 0 assertions.
+   0 failures, 0 errors.
+   {:test 1, :pass 0, :fail 0, :error 0, :type :summary}</pre></div></div>
+<div class="paragraph"><p>Runs all tests in a project</p></div></section>
+<section id="lein_test_refresh"><h2>lein-test-refresh</h2><div class="ulist"><ul><li><p>Reloads code and runs tests when you save a file</p></li><li><p>Leiningen plugin</p></li></ul></div>
+<div class="paragraph"><p>Add lein-test-refresh to your <code>~/.lein/profiles.clj</code>:</p></div>
+<div class="literalblock"><div class="content"><pre>{:user
+ {:plugins
+  [[com.jakemccrary/lein-test-refresh "0.22.0"]]}}</pre></div></div></section>
+<section id="lein_test_refresh_2"><h2>lein-test-refresh</h2><div class="paragraph"><p>Alternatively as a <code>project.clj</code> dependency:</p></div>
+<div class="literalblock"><div class="content"><pre>(defproject sample
+  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :profiles
+  {:dev
+   {:plugins
+    [[com.jakemccrary/lein-test-refresh "0.22.0"]]}})</pre></div></div></section>
+<section id="using_lein_test_refresh"><h2>Using lein-test-refresh</h2><div class="literalblock"><div class="content"><pre>$ lein test-refresh</pre></div></div>
+<div class="paragraph"><p>Watches for changes from the command line</p></div>
+<div class="paragraph"><p>Change <code>my-test</code> to print a new message</p></div>
+<div class="paragraph"><p>Tests are re-run as soon as you save the file</p></div>
+<div class="literalblock"><div class="content"><pre>(deftest my-test
+  (prn "My test ran immediately"))</pre></div></div>
+<div class="paragraph"><p>Use lein-test-refresh like a REPL</p></div>
+<div class="paragraph"><p>Test more</p></div></section>
+<section id="assertions"><h2>Assertions</h2><div class="literalblock"><div class="content"><pre>(deftest inc-adds-one-test
+  (is (= 2 (inc 1))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>=&gt; Ran 1 tests containing 1 assertions.
+   0 failures, 0 errors.</pre></div></div>
+<div class="ulist"><ul><li><p><code>(= expected actual)</code></p></li><li><p>Expected: value literal</p></li><li><p>Actual: result of invoking the function under test</p></li></ul></div></section>
+<section id="failures"><h2>Failures</h2><div class="literalblock"><div class="content"><pre>(deftest broken-test
+  (is (= 1 (inc 1))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>=&gt; FAIL in (broken-test)
+   expected: (= 1 (inc 1))
+     actual: (not (= 1 2))</pre></div></div></section>
+<section id="can_use_any_truthy_assertion"><h2>Can use any truthy assertion</h2><div class="literalblock"><div class="content"><pre>(deftest odd-test
+  (is (odd? 1)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest create-test
+  (is (create-thing)))</pre></div></div></section>
+<section id="describing_the_assertions"><h2>Describing the assertions</h2><div class="literalblock"><div class="content"><pre>(deftest pythag-test
+  (is (= (* 5 5)
+         (+ (* 3 3) (* 4 4)))
+      "The square of the hypotenuse
+      is equal to the sum of the squares
+      of the other two sides"))</pre></div></div></section>
+<section id="comparing_complex_values"><h2>Comparing complex values</h2><div class="literalblock"><div class="content"><pre>expected: (= {:foo :bar, :baz :quux} {:foo :bar, :baz :quux} {:fo :bar, :baz :quux})
+  actual: (not (= {:foo :bar, :baz :quux} {:foo :bar, :baz :quux} {:fo :bar, :baz :quux}))</pre></div></div>
+<div class="paragraph"><p>Huh?</p></div>
+<div class="literalblock"><div class="content"><pre>expected: {:foo :bar, :baz :quux}
+  actual: {:fo :bar, :baz :quux}
+    diff: - {:foo :bar}
+          + {:fo :bar}</pre></div></div>
+<div class="paragraph"><p><code>pjstadig/humane-test-output</code> (or <code>venantius/ultra</code>)</p></div></section>
+<section id="humane_test_output"><h2>Humane test output</h2><div class="paragraph"><p><code>~/.lein/profiles.clj</code>:</p></div>
+<div class="literalblock"><div class="content"><pre>{:user
+ {:dependencies
+  [[pjstadig/humane-test-output "0.8.3"]]
+  :injections
+   [(require 'pjstadig.humane-test-output)
+    (pjstadig.humane-test-output/activate!)]}}</pre></div></div></section>
+<section id="grouping_assertions"><h2>Grouping assertions</h2><div class="literalblock"><div class="content"><pre>(deftest math-test
+  (testing "Basic math"
+    (is (odd? 1))
+    (is (= 2 (inc 1))))
+  (testing "Pythagoras"
+    (is (= (* 5 5)
+           (+ (* 3 3) (* 4 4)))
+        "The square of the hypotenuse
+        is equal to the sum of the squares
+        of the other two sides"))</pre></div></div></section>
+<section id="are"><h2>are</h2><div class="literalblock"><div class="content"><pre>(are [x y] (= x y)
+     2 (+ 1 1)
+     4 (* 2 2))</pre></div></div>
+<div class="paragraph"><p>Concisely expresses multiple assertions</p></div>
+<div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">Disadvantages</td></tr></table></div>
+<div class="ulist"><ul><li><p>Easy to make an error in the syntax</p></li><li><p>Overly terse</p></li><li><p>Line numbers are not preserved (harder to find the failing test)</p></li></ul></div></section>
+<section id="should_throw_an_exception"><h2>Should throw an exception</h2><div class="literalblock"><div class="content"><pre>(defn maybe-inc [x]
+  (if (= 42 x)
+    (throw (ex-info "oh no" {}))
+    (inc x)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest test-maybe-inc-throws
+  (is (thrown? Exception
+        (maybe-inc 42)))
+  (is (thrown-with-msg? Exception #"oh no"
+        (maybe-inc 42))))</pre></div></div></section>
+<section id="test_fixtures"><h2>Test fixtures</h2><div class="literalblock"><div class="content"><pre>(use-fixtures :each
+  (fn print-enter-exit [tests]
+    (println "before")
+    (tests)
+    (println "after")))</pre></div></div>
+<div class="ulist"><ul><li><p>A fixture is just a function</p></li><li><p>Takes a test and calls it (tests are functions)</p></li><li><p>Set up and tear down resources (database connections etc)</p></li><li><p><code>:each</code> means run for every test in the namespace</p></li></ul></div>
+<aside class="notes"><div class="paragraph"><p>Test runner will call the fixture</p></div>
+<div class="ulist"><ul><li><p>prints “before”</p></li><li><p>executes the tests in the namespace</p></li><li><p>prints “after”</p></li></ul></div></aside></section>
+<section id="every_vs_once"><h2>Every vs once</h2><div class="literalblock"><div class="content"><pre>(use-fixtures :once
+  (fn capture-prints [f]
+    (with-out-str (f))))</pre></div></div>
+<div class="ulist"><ul><li><p>This fixture captures output, prevents clutter</p></li><li><p><code>:once</code> per namespace</p></li></ul></div></section>
+<section id="fixtures"><h2>Fixtures</h2><div class="ulist"><ul><li><p>Common use case is when doing database tests</p></li><li><p>Wrap the test execution inside a transaction</p></li><li><p>Rollback after the test completes</p></li><li><p>Avoids the need to clean up data</p></li></ul></div></section>
+<section id="mocking"><h2>Mocking</h2><div class="literalblock"><div class="content"><pre>(defn post [url]
+  {:body (str "Hello world")})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest test-post
+  (with-redefs [str (fn [&amp; args]
+                       "Goodbye world")]
+    (is (= {:body "Goodbye world"}
+           (post "http://service.com/greet")))))</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content"><code>let</code> does not suffice, <code>str</code> is outside of scope</td></tr></table></div></section>
+<section id="mocking_2"><h2>Mocking</h2><div class="ulist"><ul><li><p>Replace any var using <code>with-redefs</code></p></li><li><p>Disable dependencies during the test</p></li><li><p>Isolate particular behaviors</p></li><li><p>Test exceptional conditions</p><div class="ulist"><ul><li><p>always throw</p></li><li><p>never throw</p></li></ul></div></li></ul></div></section>
+<section id="debugging"><h2>Debugging</h2><div class="paragraph"><p>Print out an intermediary values</p></div>
+<div class="literalblock"><div class="content"><pre>(defn shazam [a b]
+  (/ 1 (+ a b) (+ a (* a b))))</pre></div></div>
+<div class="paragraph"><p>What is <code>(+ a (* a b))</code> evaluating to? <code>(doto &#8230;&#8203; (prn))</code></p></div>
+<div class="literalblock"><div class="content"><pre>(defn shazam [a b]
+  (/ 1 (+ a b) (doto (+ a (* a b)) (prn "***"))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(shazam 1 2)
+=&gt; 3 "***"
+   1/9</pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p><code>prn</code> will not work, always returns <code>nil</code></p></li><li><p><code>doto</code> causes side-effect to occur, and return the original argument</p></li></ul></div></aside></section>
+<section id="doto"><h2>doto</h2><div class="paragraph"><p>Also useful for Java interop:</p></div>
+<div class="literalblock"><div class="content"><pre>(doto (new java.util.HashMap)
+  (.put "a" 1)
+  (.put "b" 2))
+=&gt; {"a" 1, "b" 2}</pre></div></div>
+<div class="paragraph"><p>We get the constructed object, with side-effects applied</p></div></section>
+<section id="debugging_2"><h2>Debugging</h2><div class="ulist"><ul><li><p>Ask the REPL questions</p></li><li><p>Build small incremental functions</p></li><li><p>Write tests</p></li></ul></div></section>
+<section id="workflow_demo"><h2>Workflow demo</h2></section>
+<section id="exercises_4"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 4</p></div></section>
+<section id="answers_11"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn pythag [a b]
+  (Math/sqrt (+ (* a a) (* b b))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest test-pythag
+  (is (= 5 (pythag 4 3)))
+  (is (= 13 (pythag 12 5))))</pre></div></div></section>
+<section id="answers_12"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn post [url]
+  {:body (str "Hello world")})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest test-post
+  (let [c (atom 0)]
+    (with-redefs [str (fn [&amp; args]
+                        (swap! c inc)
+                        "Goodbye world")]
+      (post "http://service.com/greet")
+      (post "http://service.com/greet")
+      (post "http://service.com/greet")
+      (is (= 3 @c)))))</pre></div></div></section>
+<section id="control_flow" data-state="title"><h2>5. Control Flow</h2><div class="paragraph"><p><span class="image"><img src="img/control.jpg" alt="control"></span></p></div>
+<div class="quoteblock"><blockquote>Control your own destiny or someone else will.</blockquote><div class="attribution">&#8212; Jack Welch</div></div></section>
+<section id="conditionals_if"><h2>Conditionals: if</h2><div class="literalblock"><div class="content"><pre>(if (pos? 1)
+  "one is positive"
+  "or is it?")
+=&gt; "one is positive"</pre></div></div>
+<div class="ulist"><ul><li><p>Chooses between two options</p></li><li><p>Returns a result</p></li><li><p>Only one branch is evaluated</p></li><li><p>A function call evaluates all arguments</p></li></ul></div></section>
+<section id="truthiness"><h2>Truthiness</h2><div class="ulist"><ul><li><p>Booleans: <code>true</code> and <code>false</code></p></li><li><p><code>nil</code> means nothing and is considered false in logical tests</p></li><li><p>Anything else is truthy</p><div class="literalblock"><div class="content"><pre>(if 5
+  "it's five!"
+  "no problem")
+=&gt; "it's five!"</pre></div></div></li></ul></div></section>
+<section id="use_do_to_group_multiple_statements"><h2>Use do to group multiple statements</h2><div class="literalblock"><div class="content"><pre>(if (pos? 1)
+  (do (println "hi")
+      "one is positive")
+  "or is it?")
+=&gt; "hi"
+   "one is positive"</pre></div></div></section>
+<section id="conditionals_when"><h2>Conditionals: when</h2><div class="literalblock"><div class="content"><pre>(when (pos? 1)
+  (println "multiple expressions allowed")
+  :ok)
+=&gt; multiple expressions allowed
+   :ok</pre></div></div>
+<div class="ulist"><ul><li><p>When test fails, nothing is evaluated</p></li><li><p>When test passes, the entire body is evaluated</p></li><li><p>Returns a result</p></li></ul></div></section>
+<section id="conditionals_cond"><h2>Conditionals: cond</h2><div class="literalblock"><div class="content"><pre>(def x {:cake 1})
+(cond (= x 1) "one"
+      (= x :cake) "the cake is a lie"
+      (map? x) "it's a map!"
+      :else "not sure what it is")
+=&gt; "it's a map!"</pre></div></div>
+<div class="ulist"><ul><li><p>Multiple branches</p></li><li><p><code>:else</code> is not special, keywords are truthy</p></li><li><p>See also <code>condp</code> and <code>case</code></p></li></ul></div></section>
+<section id="conditionals_are_special_forms"><h2>Conditionals are special forms</h2><div class="paragraph"><p>Built in primitives, not functions</p></div>
+<div class="paragraph"><p><code>def</code>, <code>let</code>, <code>quote</code> and <code>fn</code> are special forms</p></div>
+<div class="paragraph"><p>Arguments are not evaluated</p></div>
+<div class="literalblock"><div class="content"><pre>(if condition (println "a") (println "b"))
+=&gt; b
+   nil</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(f condition (println "a") (println "b"))
+=&gt; a
+   b
+   nil</pre></div></div></section>
+<section id="macros_are_also_special"><h2>Macros are also special</h2><div class="paragraph"><p><code>or</code> is a macro</p></div>
+<div class="literalblock"><div class="content"><pre>(or true (println "Hello"))
+=&gt; true</pre></div></div>
+<div class="paragraph"><p>Arguments are not evaluated</p></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">Cannot be done with a function</td></tr></table></div>
+<div class="paragraph"><p>Macros are used to implement and extend Clojure syntax</p></div></section>
+<section id="macros_replace_forms_at_compile_time"><h2>Macros replace forms at compile time</h2><div class="literalblock"><div class="content"><pre>(or true false)</pre></div></div>
+<div class="paragraph"><p>Expands to:</p></div>
+<div class="literalblock"><div class="content"><pre>(let [a true]
+  (if a
+      a
+      (let [b false]
+        (if b
+            b)))))</pre></div></div></section>
+<section id="macros_and_special_forms_are_not_functions"><h2>Macros and special forms are not functions</h2><div class="literalblock"><div class="content"><pre>(apply or [true false true])
+=&gt; CompilerException: Can't take value of a macro</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(apply if [true :a :b])
+=&gt; CompilerException: Unable to resolve symbol: if</pre></div></div></section>
+<section id="identifying_special_forms_and_macros"><h2>Identifying special forms and macros</h2><div class="ulist"><ul><li><p>Remember the special forms:
+<code>def</code> <code>if</code> <code>do</code> <code>let</code> <code>quote</code> <code>var</code> <code>fn</code> <code>loop</code> <code>recur</code> <code>throw</code> <code>try</code></p></li><li><p>Control flow forms: <code>cond</code> <code>or</code> <code>and</code> <code>when</code></p></li><li><p>Navigate to source: <code>defn</code> or <code>defmacro</code></p></li><li><p>Metadata</p></li><li><p>Documentation</p></li></ul></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">Writing macros is covered later in the course</td></tr></table></div></section>
+<section id="recursion"><h2>Recursion</h2><div class="literalblock"><div class="content"><pre>(defn sum-up [coll result]
+  (if (empty? coll)
+    result
+    (sum-up (rest coll) (+ result (first coll)))))</pre></div></div>
+<div class="paragraph"><p>Functions that invoke themselves are recursive</p></div></section>
+<section id="tail_call_optimization"><h2>Tail Call Optimization</h2><div class="paragraph"><p>Recursion without consuming the stack</p></div>
+<div class="literalblock"><div class="content"><pre>(defn sum-up-with-recur [coll result]
+  (if (empty? coll)
+    result
+    (recur (rest coll) (+ result (first coll)))))</pre></div></div>
+<div class="ulist"><ul><li><p>Recur can only occur where a function returns</p></li><li><p>Current frame will return the result of the next call</p></li><li><p>No further calculations needed</p></li><li><p>Current frame can be released</p></li></ul></div></section>
+<section id="loops"><h2>Loops</h2><div class="literalblock"><div class="content"><pre>(loop [a 0
+       b 1]
+  (if (&lt; b 1000)
+    (recur b (+ a b))
+    a))</pre></div></div>
+<div class="ulist"><ul><li><p>Loop establishes bindings</p></li><li><p>Allows recur to the start of the loop</p></li></ul></div></section>
+<section id="exception_handling"><h2>Exception handling</h2><div class="paragraph"><p>Special forms <code>try</code> <code>catch</code> <code>finally</code> and <code>throw</code></p></div>
+<div class="literalblock"><div class="content"><pre>(try
+  (inc "cat")
+  (catch Exception e
+    (println "cat cannot be incremented"))
+  (finally
+    (println "always"))</pre></div></div></section>
+<section id="exercises_5"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 5</p></div></section>
+<section id="answers_13"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(def grade [score]
+  (cond (&gt;= score 90) "A"
+        (&gt;= score 80) "B"
+        (&gt;= score 70) "C"
+        (&gt;= score 60) "D"
+        :else "F"))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest grade-test
+  (is (= "B" (grade 85))))</pre></div></div></section>
+<section id="answers_14"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn factorial [n]
+  (loop [acc 1
+         x n]
+    (if (&lt;= x 1)
+      acc
+      (recur (* acc x) (dec x)))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest factorial-test
+  (is (= 120 (factorial 5))))</pre></div></div></section>
+<section id="answers_15"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn factorial2
+  ([n] (factorial2 1 n))
+  ([acc n]
+   (if (&lt;= n 1)
+     acc
+     (recur (* acc n) (dec n)))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest factorial2-test
+  (is (= 120 (factorial2 5))))</pre></div></div></section>
+<section id="answers_16"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn fib [limit]
+  (loop [a 1
+         b 1]
+    (if (&gt;= b limit)
+      a
+      (recur b (+ a b)))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftest fib-test
+  (is (= 89 (fib 100))))</pre></div></div></section>
+<section id="functional_programming" data-state="title"><h2>6. Functional Programming</h2><div class="paragraph"><p><span class="image"><img src="img/functional.jpg" alt="functional"></span></p></div>
+<div class="quoteblock"><blockquote>If you don&#8217;t love something, it&#8217;s not functional, in my opinion.</blockquote><div class="attribution">&#8212; Yves Behar</div></div></section>
+<section id="functions_recap"><h2>Functions recap</h2><div class="paragraph"><p>Functions always return a value</p></div>
+<div class="ulist"><ul><li><p>Usually not <code>nil</code></p></li><li><p><code>(inc 1)</code> &#8594; <code>2</code></p></li><li><p><code>(println "hi")</code> &#8594; <code>nil</code> causes a side-effect</p></li><li><p>All Input/Output is considered a side-effect</p></li></ul></div></section>
+<section id="pure_functions"><h2>Pure functions</h2><div class="literalblock"><div class="content"><pre>(str "hi" "there")
+=&gt; "hithere"</pre></div></div>
+<div class="ulist"><ul><li><p>No side-effects occur</p></li><li><p>Inputs always produce the same corresponding output</p></li></ul></div></section>
+<section id="side_effects"><h2>Side effects</h2><div class="literalblock"><div class="content"><pre>(rand-int 100)
+=&gt; 42</pre></div></div>
+<div class="ulist"><ul><li><p>Not a pure function</p></li><li><p>Returns a useful result, but changes every time</p></li><li><p>Modifying a hidden state (or based on it)</p></li></ul></div></section>
+<section id="side_effects_2"><h2>Side effects</h2><div class="literalblock"><div class="content"><pre>(def x 1)</pre></div></div>
+<div class="ulist"><ul><li><p>Returns a var</p></li><li><p>Side-effect: <code>x</code> can now be resolved</p></li></ul></div></section>
+<section id="side_effects_are_useful"><h2>Side effects are useful</h2><div class="ulist"><ul><li><p>Databases</p></li><li><p>Files</p></li><li><p>User interfaces</p></li></ul></div></section>
+<section id="many_clojure_functions_are_pure"><h2>Many Clojure functions are pure</h2><div class="literalblock"><div class="content"><pre>(conj [1 2] 3)
+=&gt; [1 2 3]</pre></div></div>
+<div class="ulist"><ul><li><p><code>conj</code> does not add something to a vector</p></li><li><p><code>conj</code> returns a new vector value</p></li></ul></div></section>
+<section id="persistent_immutable_data_structures"><h2>Persistent immutable data structures</h2><div class="ulist"><ul><li><p>Clojure implements efficient immutable data structures</p></li><li><p>Creating derivative values is cheap</p></li><li><p>Using a Java vector would require duplicating the vector</p></li><li><p>Clojure uses shared structure</p></li></ul></div>
+<aside class="notes"><div class="paragraph"><p>Persistent + Immutable FTW!</p></div>
+<div class="ulist"><ul><li><p>Just immutable w/o persistent in Java - Guava collections (nice, but add/
+remote ops deprecated b/c of performance reasons)</p></li><li><p>Just persistent w/o immutable in Java - no popular, solid solutions. Perhaps
+less a problem for complex bugs in the wild than immutability, if you had to
+choose one but not the other.</p></li></ul></div></aside></section>
+<section id="pure_functions_are_desirable"><h2>Pure functions are desirable</h2><div class="ulist"><ul><li><p>easier to reason about</p></li><li><p>easier to combine</p></li><li><p>easier to test</p></li><li><p>easier to debug</p></li><li><p>easier to parallelize</p></li></ul></div></section>
+<section id="how_can_you_change_a_variable"><h2>How can you change a variable?</h2><div class="literalblock"><div class="content"><pre>(def v [1 2])
+(conj v 3)
+=&gt; [1 2 3]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>v
+=&gt; [1 2]</pre></div></div>
+<div class="ulist"><ul><li><p><code>v</code> remains unchanged</p></li><li><p>Manage change explicitly</p></li></ul></div></section>
+<section id="use_atoms_for_mutatable_state"><h2>Use Atoms for mutatable state</h2><div class="literalblock"><div class="content"><pre>(def a (atom 1))
+(swap! a inc)
+(deref a)
+=&gt; 2</pre></div></div>
+<div class="paragraph"><p>Shorthand for <code>deref</code>:</p></div>
+<div class="literalblock"><div class="content"><pre>@a
+=&gt; 2</pre></div></div></section>
+<section id="atoms_work_with_any_data_structure"><h2>Atoms work with any data structure</h2><div class="literalblock"><div class="content"><pre>(def a (atom [1 2]))
+(swap! a conj 3)
+@a
+=&gt; [1 2 3]</pre></div></div></section>
+<section id="separate_side_effects_out"><h2>Separate side effects out</h2><div class="ulist"><ul><li><p>Keep side-effects co-located</p></li><li><p>See atoms:</p><div class="ulist"><ul><li><p>Pure function to calculate the next state</p></li><li><p>Atom to manage</p></li><li><p>Logic is separate from the side effect</p></li></ul></div></li><li><p>Keep logic pure</p></li></ul></div></section>
+<section id="do_not"><h2>Do not</h2><div class="literalblock"><div class="content"><pre>(defn f [x]
+  (def y 2)
+  (+ x y))</pre></div></div>
+<div class="paragraph"><p>Prefer instead:</p></div>
+<div class="literalblock"><div class="content"><pre>(defn f [x]
+  (let [y 2]
+    (+ x y)))</pre></div></div></section>
+<section id="apply_2"><h2>apply</h2><div class="literalblock"><div class="content"><pre>(max 1 2 5 3)
+=&gt; 5</pre></div></div>
+<div class="paragraph"><p>What if you have a sequence of many numbers?</p></div>
+<div class="literalblock"><div class="content"><pre>(def numbers [1 2 3 4 5 6 7])</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(apply max numbers)
+=&gt; 7</pre></div></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content"><code>apply</code> means to call or invoke</td></tr></table></div></section>
+<section id="partial"><h2>partial</h2><div class="paragraph"><p>In Clojure we often pass functions as values</p></div>
+<div class="literalblock"><div class="content"><pre>(partial + 1)</pre></div></div>
+<div class="paragraph"><p>Returns a function that is equivalent to:</p></div>
+<div class="literalblock"><div class="content"><pre>(fn [&amp; args]
+  (apply + 1 args))</pre></div></div>
+<div class="ulist"><ul><li><p>captures an argument</p></li><li><p>partial application</p></li></ul></div></section>
+<section id="partial_returns_a_new_function"><h2>partial returns a new function</h2><div class="paragraph"><p>Produces a function:</p></div>
+<div class="literalblock"><div class="content"><pre>((partial + 1) 2 3)
+=&gt; 6</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map (partial / 1) (range 1 5))
+=&gt; (1 1/2 1/3 1/4)</pre></div></div>
+<div class="paragraph"><p>Alternatively:</p></div>
+<div class="literalblock"><div class="content"><pre>(map #(/ 1 %) (range 1 5))
+=&gt; (1 1/2 1/3 1/4)</pre></div></div></section>
+<section id="functions_on_sequences"><h2>Functions on sequences</h2><div class="paragraph"><p>To embrace Clojure</p></div>
+<div class="paragraph"><p>is to think in sequences and data structures</p></div></section>
+<section id="sequences"><h2>Sequences</h2><div class="literalblock"><div class="content"><pre>(cons 1 ())
+=&gt; (1)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(cons 3 (cons 2 (cons 1 ())))
+=&gt; (3 2 1)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(range 10)
+=&gt; (0 1 2 3 4 5 6 7 8 9)</pre></div></div></section>
+<section id="careful"><h2>Careful</h2><div class="paragraph"><p>Clojure can produce infinite sequences</p></div>
+<div class="literalblock"><div class="content"><pre>(range)</pre></div></div>
+<div class="ulist"><ul><li><p>Don&#8217;t do this in the REPL</p></li><li><p>Press control-c to cancel the REPL if you did</p></li></ul></div></section>
+<section id="take_and_drop"><h2>take and drop</h2><div class="paragraph"><p>Limit the number of items to consume:</p></div>
+<div class="literalblock"><div class="content"><pre>(take 5 (range))
+=&gt; (0 1 2 3 4)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(take 5 (drop 5 (range)))
+=&gt; (5 6 7 8 9)</pre></div></div></section>
+<section id="filter_and_remove"><h2>filter and remove</h2><div class="literalblock"><div class="content"><pre>(filter odd? [1 2 3 4])
+=&gt; (1 3)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(remove nil? [1 2 nil 3])
+=&gt; (1 2 3)</pre></div></div>
+<div class="ulist"><ul><li><p>filter and remove are higher order functions</p></li><li><p>They take a function and a sequence</p></li><li><p>They return a sequence of values</p></li></ul></div></section>
+<section id="most_things_are_seqable"><h2>Most things are seqable</h2><div class="literalblock"><div class="content"><pre>(seq #{"a" "b" "c"})
+=&gt; ("a" "b" "c")</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(seq "string")
+=&gt; (\s \t \r \i \n \g)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(seq {:a 1, :b 2})
+=&gt; ([:a 1] [:b 2])</pre></div></div>
+<div class="paragraph"><p>Clojure collections implement <code>ISeq</code></p></div>
+<div class="paragraph"><p>Even Java types like strings and iterables</p></div></section>
+<section id="empty_sequences"><h2>Empty sequences</h2><div class="paragraph"><p><code>seq</code> returns <code>nil</code> on empty sequences</p></div>
+<div class="literalblock"><div class="content"><pre>(seq ())
+=&gt; nil</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(empty? ())
+=&gt; true</pre></div></div>
+<div class="paragraph"><p>Prefer <code>(seq xs)</code> over <code>(not (empty? xs))</code></p></div></section>
+<section id="map_3"><h2>map</h2><div class="paragraph"><p><code>map</code> calls a function for every element in a sequence:</p></div>
+<div class="literalblock"><div class="content"><pre>(map inc [1 2 3 4])
+=&gt; (2 3 4 5)</pre></div></div>
+<div class="ulist"><ul><li><p><code>map</code> <code>inc</code> over <code>[1 2 3 4]</code></p></li><li><p>Result is a sequence</p></li><li><p>Not to be confused with the map datastructure</p></li><li><p>Name is similar, behavior is similar keys &#8594; values</p></li></ul></div></section>
+<section id="map_over_multiple_sequences"><h2>map over multiple sequences</h2><div class="literalblock"><div class="content"><pre>(map + [1 2 3] [10 10 10])
+=&gt; [11 12 13]</pre></div></div></section>
+<section id="chaining_operations_over_seqs"><h2>Chaining operations over seqs</h2><div class="paragraph"><p>Output sequences can input for other functions:</p></div>
+<div class="literalblock"><div class="content"><pre>(filter odd? (map inc [1 2 3 4]))
+=&gt; (3 5)</pre></div></div>
+<div class="paragraph"><p>Keeps odd numbers from the result of <code>map</code> <code>inc</code></p></div></section>
+<section id="compose"><h2>Compose</h2><div class="literalblock"><div class="content"><pre>(g (f x))</pre></div></div>
+<div class="paragraph"><p>"compose" really just means "put together"</p></div>
+<div class="paragraph"><p>Composition is aided by</p></div>
+<div class="ulist"><ul><li><p>Idempotence</p></li><li><p>Immutability</p></li><li><p>Purity</p></li></ul></div></section>
+<section id="aggregate_with_reduce"><h2>Aggregate with reduce</h2><div class="paragraph"><p>Reduce takes a function, initial value, and sequence:</p></div>
+<div class="literalblock"><div class="content"><pre>(reduce * 1 [2 3 4])
+=&gt; 24</pre></div></div>
+<div class="paragraph"><p>Performs <code>(* 1 2)</code>, then <code>(* 3)</code>, then <code>(* 4)</code></p></div>
+<div class="paragraph"><p>Multiplication called 3 times</p></div>
+<div class="literalblock"><div class="content"><pre>(reduce * [1 2 3 4])
+=&gt; 24</pre></div></div>
+<div class="paragraph"><p>The initial value can be left out, if so it is the first element</p></div></section>
+<section id="reduce"><h2>reduce</h2><div class="literalblock"><div class="content"><pre>(reduce
+  (fn step [acc x]
+    (* acc x))
+  1
+  (range 2 5))
+=&gt; 24</pre></div></div>
+<div class="ulist"><ul><li><p>Step function takes 2 arguments; aggregate and item</p></li><li><p>Step function called for every item</p></li><li><p>Aggregate returned</p></li><li><p>Aggregate can be anything&#8230;&#8203; commonly a map</p></li></ul></div>
+<aside class="notes"><div class="paragraph"><p>add map example</p></div></aside></section>
+<section id="group_by"><h2>group-by</h2><div class="literalblock"><div class="content"><pre>(group-by count ["the" "quick" "brown" "fox"])
+=&gt; {3 ["the" "fox"], 5 ["quick" "brown"]}</pre></div></div>
+<div class="ulist"><ul><li><p>Produced a map</p></li><li><p>3 letter words ["the" "fox"]</p></li><li><p>5 letter words ["quick" and "brown"]</p></li><li><p>Can we do this with reduce?</p></li><li><p><code>frequencies</code></p></li></ul></div></section>
+<section id="sequences_are_loop_abstractions"><h2>Sequences are loop abstractions</h2><div class="paragraph"><p><code>filter</code> is like a Java loop:</p></div>
+<div class="literalblock"><div class="content"><pre>for (i=0; i &lt; vector.length; i++)
+ if (condition)
+     result.append(vector[i]);</pre></div></div>
+<div class="paragraph"><p><code>map</code> is like a Java loop:</p></div>
+<div class="literalblock"><div class="content"><pre>for (i=0; i &lt; vector.length; i++)
+    result[i] = func(vector[i]);</pre></div></div>
+<div class="paragraph"><p><code>reduce</code> is like a Java loop:</p></div>
+<div class="literalblock"><div class="content"><pre>for (i=0; i &lt; vector.length; i++)
+    result = func(result, vector[i]);</pre></div></div></section>
+<section id="sequence_abstractions"><h2>Sequence abstractions</h2><div class="ulist"><ul><li><p>Names for loops</p></li><li><p>Adds to our vocabulary</p></li><li><p>Recognize different kinds of loops</p></li><li><p>Worth the effort to learn</p><div class="ulist"><ul><li><p>Reasoning more succinctly</p></li><li><p>Communicating more precisely</p></li><li><p>Writing less code that does more</p></li></ul></div></li></ul></div></section>
+<section id="sequences_and_lambda_expressions"><h2>Sequences and lambda expressions</h2><div class="paragraph"><p>Anonymous functions:</p></div>
+<div class="literalblock"><div class="content"><pre>#(&lt; % 3)</pre></div></div>
+<div class="paragraph"><p>Handy for adding small snippets of logic:</p></div>
+<div class="literalblock"><div class="content"><pre>(filter #(&lt; % 3) (range 10))
+=&gt; (0 1 2)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map #(if (odd? %) "odd" "even") [1 2 3 4 5])
+=&gt; ("odd" "even" "odd" "even" "odd")</pre></div></div>
+<div class="paragraph"><p>More concise, descriptive, composable than loops</p></div></section>
+<section id="creating_sequences"><h2>Creating sequences</h2><div class="literalblock"><div class="content"><pre>(range 5)
+=&gt; (0 1 2 3 4)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(repeat 3 1)
+=&gt; (1 1 1)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(partition 3 (range 9))
+=&gt; ((0 1 2) (3 4 5) (6 7 8))</pre></div></div></section>
+<section id="transpose"><h2>Transpose</h2><div class="literalblock"><div class="content"><pre>(apply map vector [[1 2 3] [4 5 6]])
+=&gt; [[1 4]
+    [2 5]
+    [3 6]]</pre></div></div></section>
+<section id="tricky"><h2>Tricky</h2><div class="paragraph"><p>Common situation in Java:</p></div>
+<div class="literalblock"><div class="content"><pre>for (i=1; i &lt; v.length; i++)
+    print v[i] + v[i-1];
+=&gt; 3 5 7 9</pre></div></div>
+<div class="paragraph"><p>Using the previous value in the sequence</p></div>
+<div class="paragraph"><p>Can we represent this as a sequence?</p></div>
+<div class="paragraph"><p>Imagine two identical sequences offset slightly:</p></div>
+<div class="literalblock"><div class="content"><pre>  [1 2 3 4 5]
+[1 2 3 4 5]</pre></div></div></section>
+<section id="map_over_both_sequences"><h2>map over both sequences</h2><div class="paragraph"><p>Recall that <code>map</code> can take multiple sequences:</p></div>
+<div class="literalblock"><div class="content"><pre>(map + [1 3] [2 4])
+=&gt; (3 7)</pre></div></div>
+<div class="paragraph"><p><code>rest</code>:</p></div>
+<div class="literalblock"><div class="content"><pre>(def v [1 2 3 4 5])
+(rest v)
+=&gt; (2 3 4 5)</pre></div></div>
+<div class="paragraph"><p>Put them together:</p></div>
+<div class="literalblock"><div class="content"><pre>(map + v (rest v))
+=&gt; (3 5 7 9)</pre></div></div></section>
+<section id="visually"><h2>Visually</h2><div class="literalblock"><div class="content"><pre>v        =&gt; (1 2 3 4 5)
+(rest v) =&gt; (2 3 4 5)</pre></div></div>
+<div class="ulist"><ul><li><p>Sequences are of different lengths</p></li><li><p>map stops when the smallest sequence is exhausted</p></li><li><p>Produces a new sequence of the pairwise sums:</p><div class="literalblock"><div class="content"><pre>(3 5 7 9)</pre></div></div></li></ul></div></section>
+<section id="sequences_beat_loops"><h2>Sequences beat loops</h2><div class="ulist"><ul><li><p>Must comprehend the entire loop</p></li><li><p>Loop bodies grow and change &#8594; more complexity</p></li><li><p>Loop “off by one” mistakes</p></li><li><p>Testing loops requires invasion</p></li><li><p>Duplication of loops to customize similar operations</p></li><li><p>Loops are not composable</p></li><li><p>Loops are easy to write, but do not provide leverage</p></li></ul></div></section>
+<section id="new_requirements"><h2>New requirements</h2><div class="paragraph"><p>Multiply all of those numbers together</p></div>
+<div class="literalblock"><div class="content"><pre>result = 1;
+for (i=1; i &lt; v.length; i++)
+    result *= (v[i] + v[i-1]);
+=&gt; 945</pre></div></div>
+<div class="ulist"><ul><li><p>Invasive to the imperative loop</p></li><li><p>The change occurs inside the loop</p></li><li><p>Intertwined</p></li></ul></div></section>
+<section id="sequence_solution"><h2>Sequence solution</h2><div class="paragraph"><p>Compose <code>reduce</code> with the original <code>map</code> expression:</p></div>
+<div class="literalblock"><div class="content"><pre>(reduce * (map + v (rest v)))
+=&gt; 945</pre></div></div>
+<div class="ulist"><ul><li><p><code>reduce</code>: Aggregate by multiplication the sequence</p></li><li><p><code>map</code>: adding items together from two sequences</p></li><li><p><code>pairing</code>: the sequence of elements in v, adjacent to the rest of v</p></li></ul></div>
+<div class="paragraph"><p>This is dense, but descriptive code&#8230;&#8203; if you know the vocabulary</p></div></section>
+<section id="sequence_solution_2"><h2>Sequence solution</h2><div class="ulist"><ul><li><p>Unit test operations</p></li><li><p>Unit test the component sequences</p></li><li><p>Reuse sequences</p></li><li><p>Reason about transformations as composable parts</p></li></ul></div></section>
+<section id="sequences_summary"><h2>Sequences summary</h2><div class="paragraph"><p>Sequences are loop abstractions that allow you to ignore the implementation details</p></div>
+<div class="ulist"><ul><li><p><code>filter</code> keeps items in a sequence according to a predicate</p></li><li><p><code>map</code> calls a function over input sequence(s)</p></li><li><p><code>reduce</code> aggregates a sequence, returns a single value</p></li></ul></div></section>
+<section id="the_no_loops_challenge"><h2>The “no loops” challenge</h2><div class="ulist"><ul><li><p>Spot a loop</p></li><li><p>Stop and think about what the loop represents</p></li><li><p>Rewrite the loop as sequence operations instead</p></li></ul></div></section>
+<section id="threading_operators_why"><h2>Threading operators: why?</h2><div class="literalblock"><div class="content"><pre>(reduce * (filter odd? (map inc v)))
+=&gt; 15</pre></div></div>
+<div class="ulist"><ul><li><p>Functions offer combinatorial power</p></li><li><p>Simple functions + sequence operations</p></li><li><p>To read this code, work from inside out</p></li><li><p>Finding the inside is a challenge</p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p>But be wary of dense code</p></li><li><p>Layers make the code cryptic!</p></li></ul></div></aside></section>
+<section id="solution_order_forms_inside_first"><h2>Solution: order forms inside first</h2><div class="paragraph"><p>Name intermediary results:</p></div>
+<div class="literalblock"><div class="content"><pre>(let [incs (map inc v)
+      odd-incs (filter odd? incs)]
+  (reduce * odd-incs))
+=&gt; 15</pre></div></div></section>
+<section id="or_use_a_thread_last"><h2>Or use a thread last</h2><div class="literalblock"><div class="content"><pre>(-&gt;&gt; v
+     (map inc)
+     (filter odd?)
+     (reduce *))
+=&gt; 15</pre></div></div>
+<div class="ulist"><ul><li><p>Unwraps nested function calls</p></li><li><p>Avoids naming steps</p></li><li><p>Sometimes good, sometimes bad</p></li></ul></div></section>
+<section id="thread_first"><h2>Thread first</h2><div class="paragraph"><p>Similar to thread last, passes value in first position:</p></div>
+<div class="literalblock"><div class="content"><pre>(-&gt; 42
+    (/ 2)
+    (inc))
+=&gt; 22</pre></div></div>
+<div class="paragraph"><p>For empty expressions, the parens are optional:</p></div>
+<div class="literalblock"><div class="content"><pre>(-&gt; 42
+    (/ 2)
+    inc)
+=&gt; 22</pre></div></div></section>
+<section id="data_structures_are_functions"><h2>Data structures are functions</h2><div class="literalblock"><div class="content"><pre>(get {:a 1 :b 2} :a)
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>({:a 1 :b 2} :a)
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map {:a 1, :b 2} [:a :b])
+=&gt; (1 2)</pre></div></div>
+<div class="ulist"><ul><li><p>Maps are functions</p></li><li><p>They delegate to <code>get</code></p></li></ul></div></section>
+<section id="keywords_are_functions"><h2>Keywords are functions</h2><div class="literalblock"><div class="content"><pre>(:a {:a 1 :b 2})
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map :a [{:a 1} {:a 2} {:a 3}])
+=&gt; (1 2 3)</pre></div></div>
+<div class="paragraph"><p><code>get</code> <code>:a</code> for each element in a sequence</p></div>
+<div class="paragraph"><p>Instead of</p></div>
+<div class="literalblock"><div class="content"><pre>(map (fn [m] (get m :a)) [{:a 1} {:a 2} {:a 3}])
+=&gt; (1 2 3)</pre></div></div></section>
+<section id="sets_are_functions"><h2>Sets are functions</h2><div class="literalblock"><div class="content"><pre>(get #{1 2 3} 2)
+=&gt; 2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(#{1 2 3} 2)
+=&gt; 2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(remove #{nil "bad"} [:a nil :b "bad" "good"])</pre></div></div></section>
+<section id="vectors_are_functions"><h2>Vectors are functions</h2><div class="literalblock"><div class="content"><pre>(get [1 2 3] 0)
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>([1 2 3] 0)
+=&gt; 1</pre></div></div></section>
+<section id="defaults"><h2>Defaults</h2><div class="paragraph"><p><code>get</code> can be passed a <code>not-found</code> value:</p></div>
+<div class="literalblock"><div class="content"><pre>(get {} :a "default")
+=&gt; "default"</pre></div></div>
+<div class="paragraph"><p>Datastructures as functions do too:</p></div>
+<div class="literalblock"><div class="content"><pre>({:a 1, :b 2} :c -1)
+=&gt; -1</pre></div></div></section>
+<section id="laziness"><h2>Laziness</h2><div class="paragraph"><p>TODO</p></div></section>
+<section id="exercises_6"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 6</p></div></section>
+<section id="answers_17"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn sum-between [a b]
+  (apply + (range a (inc b))))
+(sum-between 3 5)
+=&gt; 12</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defn powers-of [n]
+  (iterate #(* % n) 1))
+(take 5 (powers-of 2))
+=&gt; (1 2 4 8 16)</pre></div></div></section>
+<section id="answers_18"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn shorten [s]
+  (remove #{\a \e \i \o \u} s))
+(apply str (shorten "Clojure sets are functions"))
+=&gt; "Cljr sts r fnctns"</pre></div></div></section>
+<section id="answers_19"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn fractions []
+  (map / (repeat 1) (rest (range))))
+(take 5 (fractions))
+=&gt; (1 1/2 1/3 1/4 1/5)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defn fraction-powers [n]
+  (map / (repeat 1) (powers-of n)))
+(take 5 (fraction-powers 2))
+=&gt; (1 1/2 1/4 1/8 1/16)</pre></div></div></section>
+<section id="answers_20"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn fib-step [[a b]]
+  [b (+ a b)])
+(defn fib-seq []
+  (map first (iterate fib-step [1 1])))
+(take 10 (fib-seq))
+=&gt; (1 1 2 3 5 8 13 21 34 55)</pre></div></div></section>
+<section id="challenge_2_processing_files"><h2>Challenge 2: Processing files</h2><div class="paragraph"><p>Insuricorp branches collect applications for the “corgi cover” policy and periodically send them to headquarters in a large comma separated text file.
+You have been tasked with processing the files using the validation logic you built earlier.</p></div></section>
+<section id="part_1_2"><h2>Part 1:</h2><div class="paragraph"><p>Create a function that opens a file called corgi-cover-applications.csv and converts every row into a data structure and prints it.
+Next use that data structure as an input to your validation function and print the result.
+See <code>slurp</code>, <code>line-seq</code>, <code>clojure.string/split</code>.</p></div></section>
+<section id="part_2_2"><h2>Part 2:</h2><div class="paragraph"><p>The downstream Insuricorp systems will only be operating on corgi cover applications that pass your eligibility check.
+But the invalid corgi cover applications need to be sent back to the branches so that they can follow up with the customers on why they are not eligible.
+Create a new function that opens two output files and writes to them based upon your eligibility check.
+The files should be called <code>eligible-corgi-cover-applications.csv</code> and <code>ineligible-corgi-cover-applications.csv</code>.</p></div></section>
+<section id="part_3_2"><h2>Part 3:</h2><div class="paragraph"><p>A request has come in from several Insuricorp branches that if a person is ineligible for corgi cover, a short reason be supplied. That way the sales reps don&#8217;t have to spend time figuring out what they need to tell the customer. Create a new validation function that instead of returning a boolean, returns nil if no problems are found, or returns a string with the reason if a problem is found. Create a new processing function that splits the applications into two files based on the new validator.</p></div></section>
+<section id="part_4_2"><h2>Part 4:</h2><div class="paragraph"><p>As part of the Megacorp merger, the downstream systems are converting to JSON format.
+Create a new function that writes JSON data to a eligible-corgi-cover-applications.json file</p></div></section>
+<section id="java_interop" data-state="title"><h2>7. Java Interop</h2><div class="paragraph"><p><span class="image"><img src="img/interop.jpg" alt="interop"></span></p></div>
+<div class="quoteblock"><blockquote>Sitting in my favorite coffeehouse with a new notebook and a hot cup of java is my idea of Heaven.</blockquote><div class="attribution">&#8212; Libba Bray</div></div></section>
+<section id="clojure_syntax_for_java_constructors"><h2>Clojure syntax for Java constructors</h2><div class="literalblock"><div class="content"><pre>(ns training.core
+  (:import (java.util Date)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(Date.)
+(Date. 2018 02 17)</pre></div></div>
+<div class="paragraph"><p>Which is equivalent to the less used variant:</p></div>
+<div class="literalblock"><div class="content"><pre>(new Date)
+(new Date 2018 02 17)</pre></div></div></section>
+<section id="calling_methods_on_a_java_object"><h2>Calling methods on a Java object</h2><div class="literalblock"><div class="content"><pre>(.length "hello world")
+(.isDirectory (java.io.File. "my-dir"))</pre></div></div>
+<div class="paragraph"><p>Equivalent to the less used variant:</p></div>
+<div class="literalblock"><div class="content"><pre>(. "hello world" length)
+(. (java.io.File. "my-dir") isDirectory)</pre></div></div></section>
+<section id="static_and_inner"><h2>Static and inner</h2><div class="paragraph"><p>Java static method calls:</p></div>
+<div class="literalblock"><div class="content"><pre>(Math/pow 1 2)
+(.print System/out "hi")</pre></div></div>
+<div class="paragraph"><p>Inner classes:</p></div>
+<div class="literalblock"><div class="content"><pre>java.nio.channels.FileChannel$MapMode/READ_ONLY</pre></div></div></section>
+<section id="initializing_objects_with_doto"><h2>Initializing objects with doto</h2><div class="literalblock"><div class="content"><pre>(ns training.core
+  (:import (java.util HashMap)))
+(doto (HashMap.)
+  (.put "a" 1)
+  (.put "b" 2))
+=&gt; {"a" 1, "b" 2}</pre></div></div>
+<div class="paragraph"><p>We get the constructed object, with side-effects applied</p></div></section>
+<section id="reify"><h2>reify</h2><div class="paragraph"><p><code>reify</code> creates an object that conforms to an interface:</p></div>
+<div class="literalblock"><div class="content"><pre>(.listFiles (java.io.File. ".")
+  (reify
+    java.io.FileFilter
+    (accept [this f]
+      (.isDirectory f))))</pre></div></div>
+<div class="paragraph"><p>Notice that we did not define a class?</p></div></section>
+<section id="gen_class_and_proxy"><h2>gen-class and proxy</h2><div class="paragraph"><p><code>gen-class</code> creates a class.</p></div>
+<div class="paragraph"><p><code>proxy</code> extends a concrete superclass.</p></div>
+<div class="paragraph"><p>Rarely needed, refer to manual.</p></div></section>
+<section id="including_java_classes_in_clojure_projects"><h2>Including Java classes in Clojure projects</h2><div class="paragraph"><p>You can define Java classes in Java in a separate directory and add</p></div>
+<div class="literalblock"><div class="content"><pre>:java-source-paths ["java-src"]</pre></div></div>
+<div class="paragraph"><p>To your <code>project.clj</code> file</p></div>
+<div class="literalblock"><div class="content"><pre>lein compile</pre></div></div>
+<div class="paragraph"><p>Java code in that directory will be usable from Clojure</p></div></section>
+<section id="parallel_programming_and_concurrency" data-state="title"><h2>8. Parallel Programming and Concurrency</h2><div class="paragraph"><p><span class="image"><img src="img/parallel.jpg" alt="parallel"></span></p></div>
+<div class="quoteblock"><blockquote>Our moral traditions developed concurrently with our reason, not as its product.</blockquote><div class="attribution">&#8212; Friedrich August von Hayek</div></div></section>
+<section id="based_on_java_threads"><h2>Based on Java Threads</h2><div class="literalblock"><div class="content"><pre>(.start (Thread. (fn [] (println "Hello world"))))
+=&gt; nil
+Hello world</pre></div></div>
+<div class="ulist"><ul><li><p>Message is printed after result is returned</p></li><li><p><code>IFn</code> implements <code>IRunnable</code></p></li></ul></div></section>
+<section id="vars"><h2>Vars</h2><div class="paragraph"><p><code>def</code> returns a var</p></div>
+<div class="literalblock"><div class="content"><pre>(def a 1)
+=&gt; #'user/a</pre></div></div>
+<div class="paragraph"><p>See the var associated with a symbol using <code>var</code></p></div>
+<div class="literalblock"><div class="content"><pre>(var a)
+=&gt; #'user/a</pre></div></div>
+<div class="paragraph"><p><code>#'</code> is shorthand for <code>(var &#8230;&#8203;)</code></p></div>
+<div class="literalblock"><div class="content"><pre>#'a
+=&gt; #'user/a</pre></div></div></section>
+<section id="deref"><h2>Deref</h2><div class="paragraph"><p>Gets the value associated with a var</p></div>
+<div class="literalblock"><div class="content"><pre>(deref #'a)
+=&gt; 1</pre></div></div>
+<div class="paragraph"><p><code>@</code> is shorthand for <code>(deref &#8230;&#8203;)</code></p></div>
+<div class="literalblock"><div class="content"><pre>@(var a)
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>@#'a =&gt; 1</pre></div></div></section>
+<section id="vars_automatically_deref_when_evaluated"><h2>Vars automatically deref when evaluated</h2><div class="literalblock"><div class="content"><pre>a
+=&gt; 1</pre></div></div>
+<div class="paragraph"><p>Symbol <code>a</code> &#8594; Var <code>a</code> &#8594; value</p></div>
+<div class="paragraph"><p>We don&#8217;t normally write <code>@#'a</code></p></div>
+<div class="paragraph"><p><code>#'</code> prevents deref</p></div></section>
+<section id="function_calls"><h2>Function calls</h2><div class="paragraph"><p>Get the function associated with inc and invoke it:</p></div>
+<div class="literalblock"><div class="content"><pre>(#'inc 1)
+=&gt; 2</pre></div></div>
+<div class="paragraph"><p>Vars automatically deref:</p></div>
+<div class="literalblock"><div class="content"><pre>(inc 1)
+=&gt; 2</pre></div></div>
+<div class="paragraph"><p>Symbol <code>inc</code> &#8594; Var <code>inc</code> &#8594; function</p></div></section>
+<section id="vars_enable_function_redefinition"><h2>Vars enable function redefinition</h2><div class="ulist"><ul><li><p>Functions defined with defn are stored in vars</p></li><li><p>Redefine vars at runtime (redefine functions)</p></li><li><p>Global mutable state, like a variable</p></li><li><p>Not coordinated</p></li></ul></div></section>
+<section id="metadata_on_vars"><h2>Metadata on Vars</h2><div class="literalblock"><div class="content"><pre>(meta #'one-hundred)
+=&gt; {:line 73, :column 1, ...}</pre></div></div>
+<div class="paragraph"><p>Metadata provided using <code>^{}</code></p></div>
+<div class="literalblock"><div class="content"><pre>(def x ^{:private true} 1)</pre></div></div>
+<div class="paragraph"><p>Attach whatever metadata you wish. Compiler looks for:</p></div>
+<div class="literalblock"><div class="content"><pre>:private
+:doc
+:author
+:type</pre></div></div></section>
+<section id="dynamic_vars"><h2>Dynamic vars</h2><div class="literalblock"><div class="content"><pre>(def ^:dynamic x 1)
+(def ^:dynamic y 1)
+(+ x y)
+=&gt; 2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(binding [x 2, y 3]
+  (+ x y))
+=&gt; 5</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(+ x y)
+=&gt; 2</pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p>By default Vars are static</p></li><li><p>Vars can be marked as dynamic to allow per-thread bindings</p></li><li><p>Bindings cannot be seen by any other thread</p></li><li><p>Per thread they obey a stack discipline</p></li><li><p>Bindings can be assigned to</p></li><li><p>Thread global</p></li><li><p>Rarely used; often better options</p></li></ul></div></aside></section>
+<section id="communicating_values"><h2>Communicating values</h2><div class="paragraph"><p>Delays, Futures, and Promises</p></div>
+<div class="paragraph"><p>Thread safe</p></div></section>
+<section id="delays"><h2>Delays</h2><div class="paragraph"><p>Execute at a later stage</p></div>
+<div class="literalblock"><div class="content"><pre>(def d (delay (println "Hello world!")
+              42))
+=&gt; #'user/d
+d
+=&gt; #object[clojure.lang.Delay
+           {:status :pending, :val nil}]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(realized? d)
+=&gt; false</pre></div></div>
+<aside class="notes"><div class="paragraph"><p>Wrap an arbitrary body of code for evaluation</p></div></aside></section>
+<section id="delay_result_is_requested_with_deref"><h2>Delay result is requested with deref</h2><div class="literalblock"><div class="content"><pre>@d
+=&gt; Hello world!
+   42</pre></div></div></section>
+<section id="delay_result_is_cached"><h2>Delay result is cached</h2><div class="paragraph"><p>Body runs once, even concurrently</p></div>
+<div class="literalblock"><div class="content"><pre>@d
+=&gt; 42</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(realized? d)
+=&gt; true</pre></div></div>
+<div class="ulist"><ul><li><p>Delays also cache the result value</p></li><li><p>Prevents another execution</p></li><li><p>Body only runs once, even concurrently</p></li></ul></div></section>
+<section id="future"><h2>Future</h2><div class="literalblock"><div class="content"><pre>(def f
+  (future (Thread/sleep 5000) 42))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>f
+=&gt; #object[clojure.core$future_call {:status :pending, :val nil}]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(realized? f)
+=&gt; false</pre></div></div></section>
+<section id="seconds_later"><h2>5 seconds later</h2><div class="literalblock"><div class="content"><pre>(realized? f)
+=&gt; true</pre></div></div>
+<div class="literalblock"><div class="content"><pre>@f
+=&gt; 42</pre></div></div>
+<div class="literalblock"><div class="content"><pre>f
+#object[clojure.core$future_call {:status :ready, :val 42}]</pre></div></div></section>
+<section id="futures"><h2>Futures</h2><div class="ulist"><ul><li><p>Easy way to spin off a new thread</p></li><li><p>Do some computation or I/O</p></li><li><p>Access in the future</p></li><li><p>Call style is compatible with delay</p></li><li><p>Work begins immediately on another thread</p></li><li><p>Flow of control is not blocked</p></li><li><p><strong>Dereferencing a future will block until the value is available</strong></p></li></ul></div></section>
+<section id="promise"><h2>Promise</h2><div class="literalblock"><div class="content"><pre>(def p (promise))
+(realized? p)
+=&gt; false</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deliver p "as-promised")
+(realized? p)
+=&gt; true</pre></div></div>
+<div class="literalblock"><div class="content"><pre>@p
+=&gt; "as-promised"</pre></div></div></section>
+<section id="promises"><h2>Promises</h2><div class="ulist"><ul><li><p>Dereference them for a value</p></li><li><p>Check if they have a value with <code>realized?</code></p></li><li><p>Block when you dereference them until they have a value</p></li><li><p><strong>Provide them with a value by calling deliver</strong></p></li><li><p>Deliver will often occur on a different thread</p></li></ul></div></section>
+<section id="atom"><h2>Atom</h2><div class="literalblock"><div class="content"><pre>(def a (atom 1))
+(swap! a inc)
+@a
+=&gt; 2</pre></div></div>
+<div class="ulist"><ul><li><p>Change the value of an atom with <code>swap!</code> or <code>reset!</code></p></li><li><p><code>swap!</code> reads the current value, applies the function to it, and attempts to <code>compare-and-set!</code> it in</p></li><li><p>May retry since another thread may have changed the value</p></li><li><p>Retries in a spin loop</p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p>The value will always be the result of the function</p></li></ul></div></aside></section>
+<section id="atoms"><h2>Atoms</h2><div class="ulist"><ul><li><p>Atomic</p></li><li><p>Changes to atoms are always free of race conditions</p></li><li><p>Function must be pure; it might be called multiple times</p></li><li><p>Uncoordinated</p></li><li><p>Synchronous</p></li></ul></div></section>
+<section id="ref"><h2>Ref</h2><div class="literalblock"><div class="content"><pre>(def r (ref 1))
+(dosync
+  (alter r inc))
+@r
+=&gt; 2</pre></div></div></section>
+<section id="refs"><h2>Refs</h2><div class="ulist"><ul><li><p>Vars ensure safe use of mutable storage locations via thread isolation, transactional references</p></li><li><p>Refs ensure safe shared use of mutable storage locations via a software transactional memory (STM) system</p></li><li><p>Refs are bound to a single storage location for their lifetime</p></li><li><p>Only allow mutation of that location to occur within a transaction</p></li><li><p>In practise Refs are rarely used</p></li></ul></div></section>
+<section id="agent"><h2>Agent</h2><div class="literalblock"><div class="content"><pre>(def a (agent 1))
+(send a inc)
+@a
+=&gt; 2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(send-off a (fn [x] (do-some-io))</pre></div></div>
+<div class="ulist"><ul><li><p><code>send</code> should be used for actions that are CPU limited</p></li><li><p><code>send-off</code> is appropriate for actions that may block on IO</p></li></ul></div></section>
+<section id="agents"><h2>Agents</h2><div class="ulist"><ul><li><p>Like Refs, Agents provide shared access to mutable state</p></li><li><p>Refs support coordinated, synchronous change of multiple locations</p></li><li><p>Agents provide independent, asynchronous change of individual locations</p></li><li><p>Agents are integrated with the STM</p></li></ul></div></section>
+<section id="exercises_7"><h2>Exercises</h2><div class="paragraph"><p>See manual section Challenge 3</p></div></section>
+<section id="challenge_3_mocking_parallel_web_requests"><h2>Challenge 3: Mocking parallel web requests</h2><div class="paragraph"><p>Insuricorp and Megacorp are integrating their IT systems. As part of this effort you need to modify the “Corgi cover” eligibility logic to call a remote web service. Your task is to set up the code and tests.</p></div></section>
+<section id="part_1_mock_a_web_request"><h2>Part 1: Mock a web request</h2><div class="paragraph"><p>Every Insuricorp “Corgi cover” policy application needs to be cross referenced with Megacorp to see if the customer has a Megacorp policy already via a remote web service. The web service is not available for you to test against yet. Set up a function called fetch-megacorp-policies to do the web request but leave the implementation empty. Create a test that changes the behavior of fetch-megacorp-policies to behave as though it were a web request; make it pause for 100ms before returning the policies that the person has. Set up a test that exercises the eligibility checks using the mocked version of a web request.</p></div></section>
+<section id="part_2_report_the_how_long_it_takes"><h2>Part 2: Report the how long it takes</h2><div class="paragraph"><p>In Java you might write something like this:</p></div>
+<div class="literalblock"><div class="content"><pre>long startTime = System.nanoTime();
+// ... the code being measured ...
+long estimatedTime = System.nanoTime() - startTime;</pre></div></div>
+<div class="paragraph"><p>Implement a similar solution in Clojure.</p></div></section>
+<section id="part_3_make_parallel_requests"><h2>Part 3: Make parallel requests</h2><div class="paragraph"><p>The web service you are using can handle multiple requests faster than a series of requests. It operates fastest with up to 20 connections. Modify your code such that multiple requests are made simultaneously. Compare the timing results to confirm the operations are happening in parallel.</p></div></section>
+<section id="part_4_error_handling"><h2>Part 4: Error handling</h2><div class="paragraph"><p>Modify your mock of fetch-megacorp-policies such that it throws an exception randomly about 10% of the time. Make sure your tests report a failure. Now update your logic to handle the errors and retry up to 10 times. The tests should pass. Then create another test where the exception is thrown 100% of the time, and the max tries occurs.</p></div></section>
+<section id="polymorphism_and_types" data-state="title"><h2>9. Polymorphism and Types</h2><div class="paragraph"><p><span class="image"><img src="img/types.jpg" alt="types"></span></p></div>
+<div class="quoteblock"><blockquote>You need a lot of different types of people to make the world better.</blockquote><div class="attribution">&#8212; Joe Louis</div></div></section>
+<section id="multimethods_introduction"><h2>Multimethods introduction</h2><div class="literalblock"><div class="content"><pre>(def my-square {:shape "square"})
+(defmulti draw :shape)
+(defmethod draw "square" [x] (render ...))
+(draw my-square)</pre></div></div>
+<div class="ulist"><ul><li><p>Keywords are functions</p></li><li><p>Common to use a keyword as a dispatch function</p></li><li><p>Looks similar to Object Oriented type dispatch</p></li><li><p>User or library can add methods later</p></li></ul></div></section>
+<section id="defining_a_multimethod"><h2>Defining a multimethod</h2><div class="paragraph"><p>Polymorphic dispatch. Define the name and the dispatch function:</p></div>
+<div class="literalblock"><div class="content"><pre>(defmulti encounter
+  (fn dispatch [a b]
+    [(:species a) (:species b)]))</pre></div></div>
+<div class="ulist"><ul><li><p>Dispatch is not limited to a single type</p></li><li><p>Dispatch might not even involve a type</p></li></ul></div></section>
+<section id="defining_method_implementations"><h2>Defining method implementations</h2><div class="paragraph"><p>Provide methods to execute for a given dispatch value:</p></div>
+<div class="literalblock"><div class="content"><pre>(defmethod encounter [:bunny :lion] [a b] :run-away)
+(defmethod encounter [:lion :bunny] [a b] :eat)
+(defmethod encounter [:lion :lion] [a b] :fight)
+(defmethod encounter [:bunny :bunny] [a b] :mate)</pre></div></div>
+<div class="ulist"><ul><li><p>Similar to a case block</p></li><li><p>Dispatch results map to function definitons</p></li><li><p>Input is unused in this example</p></li><li><p>Not limited to a single input</p></li></ul></div></section>
+<section id="calling_the_multimethod"><h2>Calling the multimethod</h2><div class="literalblock"><div class="content"><pre>(def bunny1 {:species :bunny, :other :stuff})
+(def bunny2 {:species :bunny, :other :stuff})
+(def lion1 {:species :lion, :other :stuff})
+(def lion2 {:species :lion, :other :stuff})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(encounter bunny1 bunny2)
+=&gt; :mate
+(encounter bunny1 lion1)
+=&gt; :run-away
+(encounter lion1 bunny1)
+=&gt; :eat
+(encounter lion1 lion2)
+=&gt; :fight</pre></div></div></section>
+<section id="multimethods_summary"><h2>Multimethods summary</h2><div class="ulist"><ul><li><p>Conditions under which to be called + function definitions</p></li><li><p>Often dispatch by type, but not limited to that</p></li><li><p><strong>Provide a point of extension</strong></p><div class="ulist"><ul><li><p>Clojure test reporter can be modified</p></li><li><p>JDBC types can have custom handlers added</p></li></ul></div></li></ul></div></section>
+<section id="protocols_also_provide_a_point_of_extension"><h2>Protocols also provide a point of extension</h2><div class="ulist"><ul><li><p>Protocols directly implement host polymorphism (JVM)</p><div class="ulist"><ul><li><p>Dispatch on the type of their first argument</p></li><li><p>Fast</p></li></ul></div></li><li><p><strong>User or library can add methods later</strong></p></li></ul></div></section>
+<section id="protocols"><h2>Protocols</h2><div class="literalblock"><div class="content"><pre>(defprotocol AProtocol
+  "A doc string for AProtocol abstraction"
+  (bar [a b] "bar docs")
+  (baz [a] [a b] [a b c] "baz docs"))</pre></div></div>
+<div class="ulist"><ul><li><p>A named set of named methods and their signatures</p></li></ul></div></section>
+<section id="protocols_are_similar_to_java_interfaces"><h2>Protocols are similar to Java Interfaces</h2><div class="ulist"><ul><li><p>No implementations are provided</p></li><li><p>Dynamic</p></li><li><p>Generates a corresponding interface with the same name</p></li><li><p>The protocol will automatically work with instances of the interface</p></li><li><p>A Java client can implement the protocol-generated interface</p></li></ul></div></section>
+<section id="deftype_supports_protocols_directly"><h2>deftype supports protocols directly</h2><div class="literalblock"><div class="content"><pre>(defprotocol P
+  (foo [x])
+  (bar [x] [x y]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(deftype T [a b c]
+  P
+  (foo [x] a)
+  (bar [x] b)
+  (bar [x y] (+ c y)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(bar (T. 1 2 3) 42)
+=&gt; 45</pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p><code>bar</code> has 2 signatures</p></li><li><p><code>a</code>, <code>b</code>, <code>c</code> are constructor arguments</p></li></ul></div></aside></section>
+<section id="reify_2"><h2>reify</h2><div class="literalblock"><div class="content"><pre>(def obj (reify P
+           (foo [this] 17)))
+(foo obj)
+=&gt; 17</pre></div></div>
+<div class="ulist"><ul><li><p>Creates an object that implements a protocol without defining a type</p></li><li><p>Do not have to implement all protocol signatures</p></li><li><p>Can also reify Java interfaces</p></li></ul></div></section>
+<section id="cannot_reify_a_class"><h2>Cannot reify a class</h2><div class="ulist"><ul><li><p>Java classes are closed</p></li><li><p>Java interfaces cannot be extended</p></li></ul></div></section>
+<section id="extend"><h2>extend</h2><div class="literalblock"><div class="content"><pre>(extend AType
+  AProtocol
+   {:foo an-existing-fn
+    :bar (fn [a b] ...)
+    :baz (fn ([a]...) ([a b] ...)...)}
+  BProtocol
+    {...}
+...)</pre></div></div>
+<div class="ulist"><ul><li><p>The <code>fn</code> can presume first argument is instanceof <code>AType</code></p></li><li><p>You can implement a protocol on <code>nil</code></p></li><li><p>Default implementation of protocol with <code>Object</code></p></li></ul></div></section>
+<section id="extend_type"><h2>extend-type</h2><div class="literalblock"><div class="content"><pre>(extend-type MyType
+  Countable
+    (cnt [c] ...)
+  Foo
+    (bar [x y] ...)
+    (baz ([x] ...) ([x y zs] ...)))</pre></div></div>
+<div class="paragraph"><p>Expands into:</p></div>
+<div class="literalblock"><div class="content"><pre>(extend MyType
+  Countable
+   {:cnt (fn [c] ...)}
+  Foo
+   {:baz (fn ([x] ...) ([x y zs] ...))
+    :bar (fn [x y] ...)})</pre></div></div></section>
+<section id="protocols_are_extensible"><h2>Protocols are extensible</h2><div class="ulist"><ul><li><p>User or library can add functionality later</p></li><li><p>Embrace the host (JVM or JavaScript)</p></li><li><p>Use when extension is required</p></li><li><p>Create when extension is anticipated</p></li></ul></div></section>
+<section id="creating_types_with_defrecord_and_deftype"><h2>Creating types with defrecord and deftype</h2><div class="ulist"><ul><li><p><code>deftype</code>, <code>defrecord</code>, and <code>reify</code> define implementations of abstractions, and instances of those implementations.</p></li><li><p>Resist the urge to use them to define 'structured data' as you would define classes or structures in other languages.</p></li><li><p>It is preferred to use the built-in datatypes (vectors, maps, sets) to represent structured data.</p></li></ul></div></section>
+<section id="deftype"><h2>deftype</h2><div class="literalblock"><div class="content"><pre>(deftype Circle [radius])
+(deftype Square [length width])</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(Circle. 10)
+(Square. 5 11)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(-&gt;Circle 10)
+(-&gt;Square 5 11)</pre></div></div>
+<div class="paragraph"><p>No protocol required</p></div></section>
+<section id="defrecord"><h2>defrecord</h2><div class="literalblock"><div class="content"><pre>(ns training.core
+  (:import (java.net FileNameMap)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defrecord Thing [a] FileNameMap
+  (getContentTypeFor [this fileName]
+    (str a "-" fileName)))</pre></div></div>
+<div class="ulist"><ul><li><p>Defines a record named <code>Thing</code></p></li><li><p>single field <code>a</code></p></li><li><p><code>FileNameMap</code> interface</p></li><li><p><code>String getContentTypeFor(String fileName)</code></p></li></ul></div></section>
+<section id="record_constructor"><h2>record constructor</h2><div class="literalblock"><div class="content"><pre>(def thing (Thing. "foo"))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(instance? FileNameMap thing)
+=&gt; true</pre></div></div>
+<div class="paragraph"><p>Call the method on the <code>thing</code> instance and pass <code>"bar"</code>:</p></div>
+<div class="literalblock"><div class="content"><pre>(.getContentTypeFor thing "bar")
+=&gt; "foo-bar"</pre></div></div></section>
+<section id="interacting_with_a_database" data-state="title"><h2>10. Interacting with a Database</h2><div class="paragraph"><p><span class="image"><img src="img/database.jpg" alt="database"></span></p></div>
+<div class="quoteblock"><blockquote>You can have data without information, but you cannot have information without data.</blockquote><div class="attribution">&#8212; Daniel Keys Moran</div></div></section>
+<section id="clojure_java_jdbc"><h2>clojure.java.jdbc</h2><div class="literalblock"><div class="content"><pre>$ lein new messenger</pre></div></div>
+<div class="paragraph"><p><code>project.clj</code> dependencies:</p></div>
+<div class="literalblock"><div class="content"><pre>[org.clojure/java.jdbc "0.7.5"]
+[hsqldb/hsqldb "1.8.0.10"]</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">we need the driver we plan to use to connect to a database</td></tr></table></div></section>
+<section id="connecting"><h2>Connecting</h2><div class="paragraph"><p>Require <code>jdbc</code> and configure a db connection url</p></div>
+<div class="literalblock"><div class="content"><pre>(ns messenger.core
+  (:require [clojure.java.jdbc :as jdbc]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(def db "jdbc:hsqldb:mem:testdb")</pre></div></div></section>
+<section id="inserting"><h2>Inserting</h2><div class="paragraph"><p>Create a table called testing</p></div>
+<div class="literalblock"><div class="content"><pre>(jdbc/execute! db
+  "create table messages (message varchar(1024))")</pre></div></div>
+<div class="paragraph"><p>Insert some rows</p></div>
+<div class="literalblock"><div class="content"><pre>(jdbc/insert-multi! db :messages
+                    [{:message "Hello World"}
+                     {:message "How now?"}])</pre></div></div></section>
+<section id="querying"><h2>Querying</h2><div class="literalblock"><div class="content"><pre>(jdbc/query db ["select * from messages"])
+=&gt; ({:message "Hello World"}
+    {:message "How now?"})</pre></div></div></section>
+<section id="deleting"><h2>Deleting</h2><div class="paragraph"><p>To selectively delete some data:</p></div>
+<div class="literalblock"><div class="content"><pre>(jdbc/delete! db :messages ["message like '%World%'"])
+(jdbc/query db ["select * from messages"])
+=&gt; ({:message "How now?"})</pre></div></div>
+<div class="paragraph"><p>Now there is only one row remaining</p></div></section>
+<section id="insert_multi"><h2>insert-multi!</h2><div class="literalblock"><div class="content"><pre>(jdbc/insert-multi! db :messages
+                [{:message "Nobody panic!!!"}
+                 {:message "What in the world?"}
+                 {:message "All is well."}])</pre></div></div></section>
+<section id="parameterized_query"><h2>Parameterized query</h2><div class="literalblock"><div class="content"><pre>(defn search [s]
+  (jdbc/query db
+    ["select * from messages where message like ?" s]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(search "%How%")
+=&gt; ({:message "How now?"})</pre></div></div>
+<div class="ulist"><ul><li><p>String concatenation is susceptible to SQL injection</p></li><li><p>Parameters are not part of the query; cannot perform SQL from malicious input</p></li></ul></div></section>
+<section id="starting_fresh"><h2>Starting fresh</h2><div class="paragraph"><p>If you want to redo any steps, remember that you can always drop the table and start again</p></div>
+<div class="literalblock"><div class="content"><pre>(jdbc/execute! db "drop table messages")</pre></div></div></section>
+<section id="solutions_for_sql_management"><h2>Solutions for SQL management</h2><div class="paragraph"><p>HoneySQL can be used to build SQL statements from data structures.</p></div>
+<aside class="notes"><div class="ulist"><ul><li><p><a href="https://github.com/jkk/honeysql" class="bare">https://github.com/jkk/honeysql</a></p></li><li><p>Useful to programmatically combine clauses to produce a final SQL statement</p></li><li><p>For example, user can check a checkbox to enable an additional clause in a search</p></li><li><p>Convenient to use Clojure&#8217;s capabilities for manipulating data structures</p></li><li><p>If you do not need to do manipulation, I recommend using string SQL queries</p></li><li><p>It&#8217;s easier to run string SQL interactively from a prompt</p></li></ul></div></aside></section>
+<section id="exercises_8"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 11</p></div></section>
+<section id="answers_21"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(ns messenger.core
+  (:require [clojure.java.jdbc :as jdbc]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(def db "jdbc:hsqldb:mem:testdb")</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(jdbc/execute! db
+  "create table person (id bigint, name varchar(1024))")
+(jdbc/execute! db
+  "create table policy (id bigint, name varchar(1024))")
+(jdbc/execute! db
+  "create table person_policy
+  (person_id bigint, policy_id bigint)")</pre></div></div></section>
+<section id="answers_22"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(jdbc/insert-multi! db :person
+                    [{:id 1 :name "Sally"}
+                     {:id 2 :name "Billy"}])
+(jdbc/insert-multi! db :policy
+                    [{:id 1 :name "Corgi Cover"}
+                     {:id 2 :name "Poodle Protection"}])
+(jdbc/insert-multi! db :person_policy
+                    [{:person_id 1 :policy_id 1}
+                     {:person_id 1 :policy_id 2}
+                     {:person_id 2 :policy_id 1}])</pre></div></div></section>
+<section id="answers_23"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defn find-policies [person-name]
+  (jdbc/query db ["select a.name from policy a
+                  inner join person_policy b on a.id = b.policy_id
+                  inner join person c on b.person_id = c.id
+                  where c.name = ?"
+                  person-name]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(find-policies "Sally")
+=&gt; ({:name "Corgi Cover"} {:name "Poodle Protection"})
+(find-policies "Jane")
+=&gt; ()
+(find-policies "Billy")
+=&gt; ({:name "Corgi Cover"})</pre></div></div></section>
+<section id="challenge_4_corgi_cover_database"><h2>Challenge 4: Corgi Cover Database</h2><div class="paragraph"><p>Sending files around is proving to be problematic. Sometimes applications are lost or the results of the eligibility check are not communicated back to the customer. You have been tasked with creating a central source of truth that can be queried as to what applications have been submitted and processed.</p></div></section>
+<section id="part_1_set_up_the_schema"><h2>Part 1: Set up the schema</h2><div class="paragraph"><p>Using the database of your choice, set up an initial database for the Corgi Cover project. In the code, connect to the database and create the initial table required. You can use whatever schema you like, but the first requirement is to store the applications with exactly the same data as was retrieved from the file format in Challenge 2.</p></div></section>
+<section id="part_2_populate_the_data"><h2>Part 2: Populate the data</h2><div class="paragraph"><p>Modify the code to store the applications as they are processed, and the result of the eligibility check.</p></div></section>
+<section id="part_3_write_a_spec"><h2>Part 3: Write a spec</h2><div class="paragraph"><p>Ensure that all records processed from the files meets your expectations for required fields. Write a spec that explicitly defines what should be in the applications. Validate the spec on the incoming records.</p></div></section>
+<section id="part_4_extending_to_poodle_protection"><h2>Part 4: Extending to Poodle Protection</h2><div class="paragraph"><p>Insuricorp is about to launch a new policy called “Poodle Protection”. Soon they will be processing applications with completely new rules. Set up a multimethod to handle “Poodle Protection” applications differently from “Corgi Cover” applications. For now the only difference with the rules from “Corgi Cover” is that “Poodle Protection” is available in different states: California (CA), Florida (FL), Wyoming (WY), and Hawaii (HI).</p></div></section>
+<section id="spec"><h2>11. Spec</h2><div class="paragraph"><p><span class="image"><img src="img/spec.jpg" alt="spec"></span></p></div>
+<div class="quoteblock"><blockquote>Much of the essence of building a program is in fact the debugging of the specification.</blockquote><div class="attribution">&#8212; Fred Brooks</div></div></section>
+<section id="specifications"><h2>Specifications</h2><div class="ulist"><ul><li><p>Specifies the structure of data</p></li><li><p>Validates data structures</p></li><li><p>A spec is a single argument function</p></li><li><p>Values conform to specs or don&#8217;t (validation)</p></li><li><p>A values may conform to one of multiple specs (parsing)</p></li><li><p>A registrar of named specs</p></li><li><p>Can generate data and tests</p></li><li><p>Asserts arbitrary requirements</p></li><li><p>More flexible than types</p></li></ul></div></section>
+<section id="spec_introduced_in_clojure_1_9_0"><h2>Spec Introduced in Clojure 1.9.0</h2><div class="paragraph"><p>Update <code>project.clj</code> to the right version:</p></div>
+<div class="literalblock"><div class="content"><pre>[org.clojure/clojure "1.9.0"]</pre></div></div>
+<div class="paragraph"><p>Require it</p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.spec
+  (:require [clojure.spec.alpha :as s]))</pre></div></div></section>
+<section id="any_single_argument_function_is_a_spec"><h2>Any single argument function is a spec</h2><div class="literalblock"><div class="content"><pre>(string? 0)
+=&gt; false</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(identity 1)
+=&gt; 1</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(identity nil)
+=&gt; nil</pre></div></div>
+<div class="paragraph"><p>A truthy result indicates conformity</p></div></section>
+<section id="we_validate_values_against_specs"><h2>We validate values against specs</h2><div class="literalblock"><div class="content"><pre>(s/valid? string? 0)
+=&gt; false</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? identity nil)
+=&gt; false</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? identity 1)
+=&gt; true</pre></div></div></section>
+<section id="naming_a_spec"><h2>Naming a spec</h2><div class="literalblock"><div class="content"><pre>(s/def ::first-name string?)
+=&gt; :user/first-name</pre></div></div>
+<div class="paragraph"><p>Identifier &#8594; spec is stored in the registrar</p></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? ::first-name "Tim")
+=&gt; true</pre></div></div>
+<div class="paragraph"><p><code>::first-name</code> is shorthand for <code>:my.namespace/first-name</code></p></div>
+<div class="paragraph"><p>Naming collisions are expected</p></div>
+<div class="paragraph"><p>Spec identifiers must be namespaced</p></div></section>
+<section id="another_spec_example"><h2>Another spec example</h2><div class="literalblock"><div class="content"><pre>(s/def :corgi-cover/state #{"IL" "WA" "NY" "CO"})
+(s/valid? :corgi-cover/state "IL")
+=&gt; true</pre></div></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content">Sets are functions that return the element if it is in the set</td></tr></table></div></section>
+<section id="logical_specs"><h2>Logical specs</h2><div class="literalblock"><div class="content"><pre>(s/def ::big-even (s/and int? even? #(&gt; % 1000)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? ::big-even 100000)
+=&gt; true</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? ::big-even 5)
+=&gt; false</pre></div></div></section>
+<section id="explaining_non_conformance"><h2>Explaining non-conformance</h2><div class="literalblock"><div class="content"><pre>(s/explain ::big-even 5)
+=&gt; val: 5 fails spec: ::big-even predicate: even?</pre></div></div>
+<div class="paragraph"><p>See also <code>explain-str</code></p></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content">What would happen if we had not used <code>s/and</code>?</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>#(and (int? %) (even? %) (&gt; % 1000))</pre></div></div></section>
+<section id="conforming"><h2>Conforming</h2><div class="literalblock"><div class="content"><pre>(s/def ::name-or-id (s/or :name string?
+                          :id int?))</pre></div></div>
+<div class="paragraph"><p>Chose which spec matches</p></div>
+<div class="literalblock"><div class="content"><pre>(s/conform ::name-or-id "abc")
+=&gt; [:name "abc"]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/conform ::name-or-id 100)
+=&gt; [:id 100]</pre></div></div>
+<div class="paragraph"><p>Each choice is tagged (<code>:name</code> and <code>:id</code>)</p></div></section>
+<section id="conform_is_useful_for_parsing"><h2>Conform is useful for parsing</h2><div class="ulist"><ul><li><p>Events</p></li><li><p>Function signatures</p></li><li><p>Expectations about data</p></li><li><p>Can match one of many alternatives</p></li></ul></div></section>
+<section id="allowing_nil"><h2>Allowing nil</h2><div class="literalblock"><div class="content"><pre>(string? nil)
+=&gt; false</pre></div></div>
+<div class="paragraph"><p>To include <code>nil</code> as a valid value:</p></div>
+<div class="literalblock"><div class="content"><pre>(s/nilable string?)</pre></div></div></section>
+<section id="regex_in_a_spec"><h2>regex in a spec</h2><div class="literalblock"><div class="content"><pre>(def email-regex
+  #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$")
+(s/def ::email
+  (s/and string?
+         #(re-matches email-regex %)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? ::email "timothypratley@gmail.com")
+=&gt; true
+(s/valid? ::email "not-a-valid-email-address")
+=&gt; false</pre></div></div></section>
+<section id="map_specs"><h2>Map specs</h2><div class="literalblock"><div class="content"><pre>(s/def ::first-name string?)
+(s/def ::last-name string?)
+(s/def ::phone string?)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/def ::person (s/keys :req [::first-name ::last-name]
+                        :opt [::phone]))</pre></div></div>
+<div class="paragraph"><p>Entity definition</p></div></section>
+<section id="validating_maps"><h2>Validating maps</h2><div class="literalblock"><div class="content"><pre>(s/valid? ::person
+  {::first-name "Elon"
+   ::last-name "Musk"
+   ::email "elon@example.com"})
+=&gt; true</pre></div></div>
+<div class="ulist"><ul><li><p>Required attributes are included</p></li><li><p>Every registered key has a conforming value</p></li></ul></div></section>
+<section id="qualified_keys"><h2>Qualified keys</h2><div class="paragraph"><p>Namespacing keys preserves more meaning</p></div>
+<div class="literalblock"><div class="content"><pre>{:my.namespace/first-name "Elon"
+ :my.namespace/last-name "Musk"
+ :my.namespace/email "elon@example.com"}</pre></div></div>
+<div class="paragraph"><p>But existing code often does not namespace keys</p></div>
+<div class="literalblock"><div class="content"><pre>{:first-name "Elon"
+ :last-name "Musk"
+ :email "elon@example.com"}</pre></div></div></section>
+<section id="unqualified_keys"><h2>Unqualified keys</h2><div class="literalblock"><div class="content"><pre>(s/def :unq/person
+  (s/keys :req-un [::first-name ::last-name ::email]
+          :opt-un [::phone]))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? :unq/person
+  {:first-name "Elon"
+   :last-name "Musk"
+   :email "elon@example.com"})
+=&gt; true</pre></div></div>
+<div class="ulist"><ul><li><p>req-un &#8594; required unqualified keys</p></li><li><p>opt-un &#8594; optional unqualified keys</p></li></ul></div></section>
+<section id="generic_map_map_of"><h2>Generic map: map-of</h2><div class="literalblock"><div class="content"><pre>(s/def ::scores (s/map-of string? int?))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? ::scores {"Sally" 1000,
+                    "Joe" 500
+                    "Jess" 750})
+=&gt; true</pre></div></div>
+<div class="ulist"><ul><li><p>Homogeneous keys and homogeneous values</p></li></ul></div></section>
+<section id="collections"><h2>Collections</h2><div class="literalblock"><div class="content"><pre>(s/valid (s/coll-of number?)
+         #{5 10 2})
+=&gt; true</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid (s/tuple number? string?)
+         [42 "meaning of life"])
+=&gt; true</pre></div></div></section>
+<section id="specs_can_be_combined"><h2>Specs can be combined</h2><div class="literalblock"><div class="content"><pre>(s/def :mega-corp/name string?)
+(s/def :mega-corp/policy-count int?)
+(s/def :corgi-cover/state #{"IL" "WA" "NY" "CO"})
+(s/def :corgi-cover/corgi-count pos-int?)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/def :mega-corp/corgi-cover
+  (s/keys :req-un [:mega-corp/name
+                   :corgi-cover/state
+                   :corgi-cover/corgi-count]))</pre></div></div></section>
+<section id="generators"><h2>Generators</h2><div class="ulist"><ul><li><p>Specs are designed to act as generators</p></li><li><p>Produce sample data that conforms to the spec</p></li><li><p>Useful for property-based testing</p></li></ul></div></section>
+<section id="generator_setup"><h2>Generator setup</h2><div class="paragraph"><p>Add to your <code>project.clj</code>:</p></div>
+<div class="literalblock"><div class="content"><pre>:profiles
+{:dev
+ {:dependencies
+  [[org.clojure/test.check "0.9.0"]]}}</pre></div></div>
+<div class="paragraph"><p>Require:</p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.spec
+  (:require [clojure.spec.gen.alpha :as gen]))</pre></div></div></section>
+<section id="generate_and_gen"><h2>generate and gen</h2><div class="literalblock"><div class="content"><pre>(gen/generate (s/gen int?))
+=&gt; -959</pre></div></div>
+<div class="ulist"><ul><li><p><code>gen</code> obtains the generator for a spec</p></li><li><p><code>generate</code> creates a value that conforms to the spec</p></li></ul></div></section>
+<section id="generate_can_build_complex_values"><h2>generate can build complex values</h2><div class="literalblock"><div class="content"><pre>(gen/generate (s/gen :mega-corp/corgi-cover))
+=&gt; {:name "yNd516AYD",
+    :state "NY",
+    :corgi-count 1}</pre></div></div></section>
+<section id="sample"><h2>sample</h2><div class="literalblock"><div class="content"><pre>(gen/sample (s/gen string?))
+=&gt; ("" "" "" "" "8" "W" "" "G74SmCm" "K9sL9" "82vC")</pre></div></div>
+<div class="paragraph"><p>Produces 10 examples</p></div></section>
+<section id="int_in_range"><h2>int-in range</h2><div class="literalblock"><div class="content"><pre>(s/def ::roll (s/int-in 0 11))
+(gen/sample (s/gen ::roll))
+=&gt; (1 0 0 3 1 7 10 1 5 0)</pre></div></div>
+<div class="paragraph"><p>See also <code>inst-in</code> and <code>double-in</code></p></div>
+<div class="paragraph"><p>See also <code>test.check</code> documentation</p></div></section>
+<section id="what_about_functions_arguments"><h2>What about functions arguments?</h2><div class="literalblock"><div class="content"><pre>(defn f [x y z]
+  ...)</pre></div></div>
+<div class="paragraph"><p><code>[x y z]</code> is a sequence of data arguments with different specs</p></div>
+<div class="paragraph"><p>Positional importance</p></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">unlike a stream of events</td></tr></table></div></section>
+<section id="cat_concatenation"><h2>cat - Concatenation</h2><div class="literalblock"><div class="content"><pre>(s/def ::t
+  (s/cat :a number? :b string?))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/conform ::t [2 "three"])
+=&gt; {:a 2, :b "three"}</pre></div></div>
+<div class="paragraph"><p>Covers most function argument signature</p></div></section>
+<section id="function_specs"><h2>Function specs</h2><div class="literalblock"><div class="content"><pre>(s/fdef f
+  :args (s/cat ...)
+  :ret ...
+  :fn ...)</pre></div></div>
+<div class="ulist"><ul><li><p>Sequence of inputs</p></li><li><p>Return spec</p></li><li><p>Invariant function has access to inputs and return</p></li></ul></div></section>
+<section id="function_args"><h2>Function args</h2><div class="literalblock"><div class="content"><pre>(s/fdef f :args (s/cat :num number? :item string?))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defn f [num item]
+  (str num " bottles of " item " on the wall"))</pre></div></div>
+<div class="paragraph"><p>Often declared in a different namespace</p></div></section>
+<section id="function_ret"><h2>Function ret</h2><div class="literalblock"><div class="content"><pre>(s/fdef f :ret string?)</pre></div></div></section>
+<section id="function_invariant"><h2>Function invariant</h2><div class="literalblock"><div class="content"><pre>(s/fdef f
+  :fn #(str/includes? (:ret %) (-&gt; % :args :item))</pre></div></div></section>
+<section id="putting_them_all_together"><h2>Putting them all together</h2><div class="literalblock"><div class="content"><pre>(s/fdef f :args (s/cat :num number?
+                       :item string?))
+          :ret string?
+          :fn #(str/includes?
+                 (-&gt; % :args :item)
+                 (:ret %))</pre></div></div></section>
+<section id="example_showing_different_namespaces"><h2>Example showing different namespaces</h2><div class="paragraph"><p><code>src/training/core.clj</code></p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.core)
+(defn f [x]
+  (inc x))</pre></div></div>
+<div class="paragraph"><p><code>src/training/core_spec.clj</code></p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.core-spec
+  (:require [training.core :as c]
+            [clojure.spec.alpha :as s]))
+(s/fdef c/f :args (s/cat :x int?)
+            :ret int?)</pre></div></div></section>
+<section id="checking_that_a_function_obeys_its_spec"><h2>Checking that a function obeys its spec</h2><div class="paragraph"><p><code>src/training/core_test</code></p></div>
+<div class="literalblock"><div class="content"><pre>(ns training.core-test
+  (:require [clojure.test :refer :all]
+            [clojure.spec.test.alpha :as stest]
+            [training.core :as c]))
+(deftest f-test
+  (is (nil? (-&gt; (stest/check `c/f) first :failure))))</pre></div></div></section>
+<section id="issues_with_spec"><h2>Issues with spec</h2><div class="ulist"><ul><li><p>Common to keep specs in a separate namespace</p></li><li><p><code>stest/check</code> returns a sequence containing a failure cases</p></li><li><p>Shrinks to a minimal case</p></li><li><p>Difficult to find what you want in the output</p></li><li><p>Designed for running at the REPL, clunky in tests</p></li><li><p>Make sure you tests for failure before success</p></li><li><p>The expound library helps</p></li></ul></div></section>
+<section id="expound"><h2>Expound</h2><div class="paragraph"><p>Add to project.clj dependencies</p></div>
+<div class="literalblock"><div class="content"><pre>[expound "0.5.0"]</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(ns training.expound-test
+  (:require [expound.alpha :as e]))
+(e/expound string? 1)
+=&gt;
+-- Spec failed --------------------
+  1
+should satisfy
+  string?
+-------------------------</pre></div></div></section>
+<section id="check"><h2>check</h2><div class="ulist"><ul><li><p>Generates arguments based on the <code>:args</code> spec</p></li><li><p>Invokes the function</p></li><li><p>Checks that <code>:ret</code> and <code>:fn</code> specs were satisfied</p></li><li><p>Reduces to the shortest failing case</p></li></ul></div></section>
+<section id="enumerate_namespace"><h2>enumerate-namespace</h2><div class="literalblock"><div class="content"><pre>(stest/check (stest/enumerate-namespace 'training.core))</pre></div></div>
+<div class="paragraph"><p>Tests all functions in a namespace that have a spec</p></div>
+<div class="literalblock"><div class="content"><pre>(stest/check)</pre></div></div>
+<div class="paragraph"><p>Checks all functions that have a spec</p></div></section>
+<section id="instrument"><h2>instrument</h2><div class="literalblock"><div class="content"><pre>(stest/instrument `c/f)
+(c/f "bad argument")
+=&gt; CompilerException: did not conform to spec</pre></div></div>
+<div class="ulist"><ul><li><p>Requires a fully-qualified symbol</p></li><li><p>Provides validation for external uses of a function</p></li><li><p><code>unstrument</code> to turn off</p></li></ul></div></section>
+<section id="can_instrument_namespaces_or_everything"><h2>Can instrument namespaces, or everything</h2><div class="literalblock"><div class="content"><pre>(stest/instrument (stest/enumerate-namespace 'training.core))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(stest/instrument)</pre></div></div></section>
+<section id="sequence_specs_are_regular_expressions"><h2>Sequence specs are regular expressions</h2><table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:50%"><col style="width:50%"></colgroup><tbody><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td><td class="tableblock halign-left valign-top"><p class="tableblock">0 or more of a pattern</p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><code>+</code></p></td><td class="tableblock halign-left valign-top"><p class="tableblock">1 or more of a pattern</p></td></tr><tr><td class="tableblock halign-left valign-top"><p class="tableblock"><code>?</code></p></td><td class="tableblock halign-left valign-top"><p class="tableblock">0 or 1 of a pattern</p></td></tr></table></section>
+<section id="sequence_specs"><h2>Sequence specs</h2><div class="literalblock"><div class="content"><pre>(s/valid? (s/* string?) ["a" "b" "c"])
+=&gt; true</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? (s/+ string?) [])
+=&gt; false</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/valid? (s/? string?) ["a" "b"])
+=&gt; false</pre></div></div></section>
+<section id="cat_with_subsequences"><h2>cat with subsequences</h2><div class="literalblock"><div class="content"><pre>(s/def ::t
+  (s/cat :a (s/* int?) :b string?))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/conform ::t [1 2 "three"])
+=&gt; {:a [1 2], :b "three"}</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">Matched <code>[1 2 "three"]</code>, not <code>[[1 2] "three"]</code></td></tr></table></div>
+<div class="paragraph"><p>Think of it as a regex: <code>int*string</code></p></div>
+<div class="paragraph"><p>"Any number of ints followed by a string"</p></div></section>
+<section id="alt_alternatives"><h2>alt - Alternatives</h2><div class="literalblock"><div class="content"><pre>(s/def ::t
+  (s/cat :a (s/alt :b (s/* int?)
+                   :c (s/* string?))
+         :d keyword?))</pre></div></div>
+<div class="paragraph"><p>Builds a regex: <code>(int*|string*)keyword</code></p></div>
+<div class="literalblock"><div class="content"><pre>[1 2 3 :foo]
+["abc" "def" :bar]</pre></div></div></section>
+<section id="compare_alt_with_or"><h2>Compare alt with or</h2><div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">Is <code>s/alt</code> the same as <code>s/or</code>?</td></tr></table></div>
+<div class="paragraph"><p>Inside a sequence <code>s/or</code> would match</p></div>
+<div class="literalblock"><div class="content"><pre>[[1 2 3] :foo]
+[["abc" "def"] :bar]</pre></div></div>
+<div class="paragraph"><p>The key is to think about the regex being constructed</p></div>
+<div class="paragraph"><p>Outside of sequences they do behave the same</p></div></section>
+<section id="additional_constraints"><h2>Additional constraints</h2><div class="literalblock"><div class="content"><pre>(s/def ::even-strings (s/cat :a (s/&amp; (s/* string?)
+                                     #(even? (count %)))
+                             :b keyword?))</pre></div></div>
+<div class="paragraph"><p>Matches</p></div>
+<div class="literalblock"><div class="content"><pre>["hello" "world" :k]</pre></div></div>
+<div class="ulist"><ul><li><p><code>s/&amp;</code> is like <code>s/and</code></p></li><li><p><code>s/&amp;</code> is can participate in subsequences (similar to <code>s/alt</code> vs <code>s/or</code>)</p></li></ul></div></section>
+<section id="exercise_samples_and_conforms"><h2>exercise samples and conforms</h2><div class="literalblock"><div class="content"><pre>(s/exercise (s/* (s/cat :w (s/alt :x int?))))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(s/exercise-fn training.core/f)</pre></div></div>
+<div class="ulist"><ul><li><p>Generates 10 samples and conforms them</p></li><li><p>Very useful to test specs as you build them</p></li><li><p>Can see the example and where the parts were matched</p></li></ul></div></section>
+<section id="spec_summary"><h2>Spec summary</h2><div class="ulist"><ul><li><p>Spec data</p></li><li><p>Validate data</p></li><li><p>Spec function arguments</p></li><li><p>Generate data from specs</p></li><li><p>Check functions with generated data</p></li><li><p>Instrument functions</p></li></ul></div></section>
+<section id="macros" data-state="title"><h2>12. Macros</h2><div class="paragraph"><p><span class="image"><img src="img/macros.jpg" alt="macros"></span></p></div>
+<div class="quoteblock"><blockquote>I never think about myself as an artist working in this time. I think about it in macro.</blockquote><div class="attribution">&#8212; Frank Ocean</div></div></section>
+<section id="macros_provide_syntax"><h2>Macros provide syntax</h2><div class="paragraph"><p>The "real" way to define a function:</p></div>
+<div class="literalblock"><div class="content"><pre>(def square
+  (fn [x]
+    (* x x)))</pre></div></div>
+<div class="paragraph"><p>Special syntax:</p></div>
+<div class="literalblock"><div class="content"><pre>(defn square [x]
+  (* x x))</pre></div></div>
+<div class="paragraph"><p>Syntactic sugar to remove boilerplate</p></div>
+<div class="paragraph"><p>Macros extend the syntax of Clojure</p></div></section>
+<section id="macros_expand"><h2>Macros expand</h2><div class="literalblock"><div class="content"><pre>(when (&lt; x 2)
+  (println "It's less than 2!")
+  :ok)</pre></div></div>
+<div class="paragraph"><p>Expands to</p></div>
+<div class="literalblock"><div class="content"><pre>(if (&lt; x 2)
+  (do
+    (println "It's less than 2!")
+    :ok))</pre></div></div></section>
+<section id="macroexpand_1_shows_you_what_a_macro_does"><h2>macroexpand-1 shows you what a macro does</h2><div class="literalblock"><div class="content"><pre>(macroexpand-1 '(when (&lt; x 2)
+                  (println "It's less than 2!")
+                  :ok))
+=&gt; (if (&lt; x 2)
+     (do
+       (println "It's less than 2!")
+       :ok))</pre></div></div></section>
+<section id="expanding_defn"><h2>Expanding defn</h2><div class="literalblock"><div class="content"><pre>(macroexpand-1
+  '(defn square [x]
+     (* x x)))
+=&gt; (def square
+     (clojure.core/fn ([x] (* x x))))</pre></div></div></section>
+<section id="macros_produce_code"><h2>Macros produce code</h2><div class="ulist"><ul><li><p>Functions that manipulate code</p></li><li><p>Think of it as text manipulation</p></li><li><p>Passed input forms unevaluated</p></li><li><p>Replaces the form at compile time</p></li><li><p>Have a <code>:macro</code> flag set in metadata</p></li></ul></div></section>
+<section id="using_macros"><h2>Using macros</h2><div class="literalblock"><div class="content"><pre>(map
+  (fn maybe-ok [x]
+    (when (&lt; x 2)
+      :ok))
+  (range 4))
+=&gt; (:ok :ok nil nil)</pre></div></div>
+<div class="ulist"><ul><li><p><code>when</code> is only expanded once</p></li><li><p>The form is expanded at compile time</p></li><li><p><code>maybe-ok</code> function is compiled to bytecode</p></li></ul></div></section>
+<section id="macros_do_things_functions_cannot"><h2>Macros do things functions cannot</h2><div class="ulist"><ul><li><p>Arguments manipulated at compile time</p></li><li><p>Arguments not evaluated</p></li><li><p>Cannot be replaced by a function</p></li></ul></div></section>
+<section id="functions_do_things_macros_cannot"><h2>Functions do things macros cannot</h2><div class="literalblock"><div class="content"><pre>and
+=&gt; CompilerException: Can't take value of a macro</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(map and [true false]
+         [true true])
+=&gt; CompilerException: Can't take value of a macro</pre></div></div>
+<div class="ulist"><ul><li><p>Macros are not values</p></li><li><p>Cannot be passed to higher order functions</p></li><li><p>Less useful than functions</p></li></ul></div></section>
+<section id="to_use_a_macro_as_a_function_wrap_it_in_a_function"><h2>To use a macro as a function, wrap it in a function</h2><div class="literalblock"><div class="content"><pre>(map #(and %1 %2) [true false]
+                  [true true])
+=&gt; (true false)</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content">Cannot apply arguments though&#8230;&#8203;</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>#(every? identity %&amp;)</pre></div></div></section>
+<section id="defining_macros"><h2>Defining macros</h2><div class="literalblock"><div class="content"><pre>(defmacro infix [[operand1 op operand2]]
+  (list op operand1 operand2))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(infix (1 + 1))
+=&gt; 2</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(macroexpand '(infix (1 + 1)))
+=&gt; (+ 1 1)</pre></div></div></section>
+<section id="defining_macros_2"><h2>Defining macros</h2><div class="literalblock"><div class="content"><pre>(defmacro my-when [test &amp; body]
+  (list 'if test (cons 'do body)))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(macroexpand-1
+  '(my-when (&lt; x 1)
+     (println "hi")
+     :ok))
+=&gt; (if (&lt; x 1)
+     (do
+       (println "hi")
+       :ok))</pre></div></div>
+<div class="admonitionblock note"><table><tr><td class="icon"><i class="fa fa-info-circle" title="Note"></i></td><td class="content"><code>test</code> and <code>body</code> are values, <code>if</code> and <code>do</code> are symbols</td></tr></table></div>
+<aside class="notes"><div class="paragraph"><p>Review quote</p></div></aside></section>
+<section id="macros_using_arguments"><h2>Macros using arguments</h2><div class="literalblock"><div class="content"><pre>(defmacro zen1 [x]
+  (println "x:" x)
+  x)
+(zen1 (+ 1 2))
+=&gt; x: (+ 1 2)
+3</pre></div></div>
+<div class="paragraph"><p>vs</p></div>
+<div class="literalblock"><div class="content"><pre>(defn zen2 [x]
+  (println "x:" x)
+  x)
+(zen2 (+ 1 2))
+=&gt; x: 3
+3</pre></div></div>
+<aside class="notes"><div class="ulist"><ul><li><p>The input to <code>zen1</code> was a list</p></li><li><p>For <code>zen1</code> <code>x</code> was a list</p></li><li><p>We returned <code>x</code></p></li><li><p>But the final result was <code>3</code></p></li><li><p>The list was evaluated as a function call to <code>+</code></p></li><li><p>resulting in <code>3</code></p></li><li><p>The input to <code>zen2</code> was the result of evaluating the list</p></li></ul></div></aside></section>
+<section id="syntax_quoting"><h2>Syntax quoting</h2><div class="literalblock"><div class="content"><pre>`(inc 1)
+=&gt; (clojure.core/inc 1)</pre></div></div>
+<div class="ulist"><ul><li><p>Special form called syntax-quote (also called back-quote)</p></li><li><p>All symbols in a syntax-quote form get fully qualified</p></li><li><p><code>`</code> vs <code>'</code></p></li></ul></div></section>
+<section id="unquoting"><h2>Unquoting</h2><div class="literalblock"><div class="content"><pre>`(1 2 ~(+ 1 2) ~@(map inc [3 4 5]))
+=&gt; (1 2 3 4 5 6)</pre></div></div>
+<table class="tableblock frame-all grid-all" style="width:100%"><colgroup><col style="width:33.3333%"><col style="width:33.3333%"><col style="width:33.3334%"></colgroup><thead><tr><th class="tableblock halign-left valign-top">Syntax</th><th class="tableblock halign-left valign-top">Name</th><th class="tableblock halign-left valign-top">Behavior</th></tr><tbody><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>`</pre></div></td><td class="tableblock halign-left valign-top"><p class="tableblock">Back-quote</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified quote</p></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>~</pre></div></td><td class="tableblock halign-left valign-top"><p class="tableblock">Unquote</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">Insert a value</p></td></tr><tr><td class="tableblock halign-left valign-top"><div class="literal"><pre>~@</pre></div></td><td class="tableblock halign-left valign-top"><p class="tableblock">Unquote-splicing</p></td><td class="tableblock halign-left valign-top"><p class="tableblock">Insert a sequence</p></td></tr></table></section>
+<section id="why_fully_qualify"><h2>Why fully qualify?</h2><div class="literalblock"><div class="content"><pre>(defmacro m1 []
+  '(inc 1))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defmacro m2 []
+  `(inc 1))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(let [inc dec]
+  {:m1 (m1)
+   :m2 (m2)})</pre></div></div>
+<div class="literalblock"><div class="content"><pre>=&gt; {:m1 0, :m2 2}</pre></div></div>
+<div class="ulist"><ul><li><p>Symbols have contextual meaning</p></li><li><p>Macros are defined with no context</p></li></ul></div></section>
+<section id="another_source_of_naming_collisions"><h2>Another source of naming collisions</h2><div class="literalblock"><div class="content"><pre>(defmacro bad [expr]
+  (list 'let '[a 1]
+    (list 'inc expr)))
+(bad 0)
+=&gt; 1
+(def a 0)
+(bad a)
+=&gt; 2</pre></div></div>
+<div class="admonitionblock warning"><table><tr><td class="icon"><i class="fa fa-warning" title="Warning"></i></td><td class="content">The parameter name collided with the implementation</td></tr></table></div>
+<div class="literalblock"><div class="content"><pre>(macroexpand-1 '(bad a))
+=&gt; (let [a 1] (inc a))</pre></div></div></section>
+<section id="gensyms"><h2>Gensyms</h2><div class="literalblock"><div class="content"><pre>(defmacro good [expr]
+  `(let [a# 1]
+     (inc ~expr)))
+(good a)
+=&gt; 1
+(good 0)
+=&gt; 1</pre></div></div>
+<div class="paragraph"><p><code>a#</code> expands to a randomly generated symbol</p></div>
+<div class="literalblock"><div class="content"><pre>(macroexpand-1 '(good a))
+=&gt; (clojure.core/let [a__6500__auto__ 1]
+     (clojure.core/inc a))</pre></div></div></section>
+<section id="macro_strategy"><h2>Macro strategy</h2><div class="paragraph"><p>When working on a non-trivial macro a good strategy is:</p></div>
+<div class="ulist"><ul><li><p>Step 1: Write a function!</p></li><li><p>Step 2: Call your function from the macro</p></li></ul></div>
+<div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content">Keep the macro small and offload form transformations to other functions</td></tr></table></div></section>
+<section id="when_should_i_write_a_macro"><h2>When should I write a macro?</h2><div class="paragraph"><p>Almost never</p></div>
+<div class="paragraph"><p>To provide new syntax: core.async</p></div>
+<div class="literalblock"><div class="content"><pre>(def echo-chan (chan))
+(go (println (&lt;! echo-chan)))
+(&gt;!! echo-chan "hello")
+=&gt; true
+hello</pre></div></div></section>
+<section id="code_as_data"><h2>Code as data</h2><div class="ulist"><ul><li><p>Functions that produce code</p></li><li><p>Manipulate code&#8230;&#8203; as data</p></li><li><p>Homoiconic: the language text has the same structure as its abstract syntax tree</p></li><li><p>Code transformed using the same representation</p></li><li><p>Nested code is well represented as a data structure</p></li><li><p>Language can be extended conveniently</p></li><li><p>Lisp "syntax" underpins Clojure "syntax"</p></li></ul></div></section>
+<section id="reading_macros_is_a_useful_skill"><h2>Reading macros is a useful skill</h2><div class="ulist"><ul><li><p>Macros are common in clojure.core and libraries</p></li><li><p>Macros can have surprising behavior</p></li><li><p>Debugging</p><div class="ulist"><ul><li><p>Identifying macros</p></li><li><p>Expanding macros</p></li></ul></div></li></ul></div></section>
+<section id="macro_summary"><h2>Macro summary</h2><div class="ulist"><ul><li><p>Manipulate the operand forms</p></li><li><p>Do not evaluate the input forms</p></li><li><p>Not functions</p></li><li><p>Cannot be passed to other functions</p></li></ul></div></section>
+<section id="exercises_9"><h2>Exercises</h2><div class="paragraph"><p>See manual end of section 7</p></div></section>
+<section id="answers_24"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defmacro ignore [expr] nil)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(defmacro when2 [test &amp; body]
+  (list 'if test (cons 'do body))</pre></div></div></section>
+<section id="answers_25"><h2>Answers</h2><div class="literalblock"><div class="content"><pre>(defmacro spy [expr]
+  `(let [result# ~expr]
+     (println "Expression" '~expr "has value" result#)
+     result#))</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(macroexpand-1 '(spy (* 2 3)))
+=&gt; (clojure.core/let [result__6418__auto__ (* 2 3)]
+     (clojure.core/println
+       "Expression" (quote (* 2 3))
+       "has value" result__6418__auto__)
+     result__6418__auto__)</pre></div></div>
+<div class="literalblock"><div class="content"><pre>(+ 1 (spy (* 2 3)))
+=&gt; Expression (* 2 3) has value 6
+   7</pre></div></div></section>
+<section id="answers_26"><h2>Answers</h2><div class="paragraph"><p>See clojure source code</p></div>
+<div class="literalblock"><div class="content"><pre>(defmacro or2
+  ([] nil)
+  ([x] x)
+  ([x &amp; next]
+      `(let [or# ~x]
+         (if or# or# (or ~@next)))))</pre></div></div>
+<aside class="notes"><div class="paragraph"><p>Often good to start with an example and customize</p></div></aside></section>
+<section id="further_reading" data-state="title"><h2>12. Further reading</h2><div class="paragraph"><p><span class="image"><img src="img/further-reading.jpg" alt="further reading"></span></p></div>
+<div class="quoteblock"><blockquote>You can never get a cup of tea large enough or a book long enough to suit me.</blockquote><div class="attribution">&#8212; C.S. Lewis</div></div></section>
+<section id="further_reading"><h2>Further reading</h2><div class="paragraph"><p>Further exercises:	<a href="https://www.4clojure.com/" class="bare">https://www.4clojure.com/</a></p></div>
+<div class="paragraph"><p>Clojure for Java Programmers - Rich Hickey</p></div>
+<div class="ulist"><ul><li><p>Part 1:		<a href="https://www.youtube.com/watch?v=P76Vbsk_3J0" class="bare">https://www.youtube.com/watch?v=P76Vbsk_3J0</a></p></li><li><p>Part 2:		<a href="https://www.youtube.com/watch?v=hb3rurFxrZ8" class="bare">https://www.youtube.com/watch?v=hb3rurFxrZ8</a></p></li></ul></div>
+<aside class="notes"><div class="ulist"><ul><li><p>Writing Clojure code requires more thinking and less typing than other languages</p></li><li><p>Don&#8217;t feel frustrated if the code comes slowly at first</p></li><li><p>Being a great programmer requires thinking</p></li><li><p>You will only reach your true potential expressing code in ways that empower you rather than constrain you</p></li></ul></div></aside></section>
+<section id="best_practices"><h2>Best practices</h2><div class="ulist"><ul><li><p>Write tests</p></li><li><p>Write expectation strings for tests</p></li><li><p>Use lein-test-refresh</p></li><li><p>Keep functions short and focused</p><div class="ulist"><ul><li><p>Extract sub functions</p></li><li><p>Compose functions</p></li></ul></div></li></ul></div></section>
+<section id="best_practices_2"><h2>Best practices</h2><div class="ulist"><ul><li><p>Keep namespaces short and focused</p><div class="ulist"><ul><li><p>Extract related functions into new namespaces</p></li><li><p>Write doc-strings for namespaces</p></li></ul></div></li><li><p>Write doc-strings for functions</p></li><li><p>Write doc-strings for defs when appropriate</p></li><li><p>Follow the Clojure style guide</p></li></ul></div></section>
+<section id="tips"><h2>Tips</h2><div class="ulist"><ul><li><p>Build bottom up</p></li><li><p>Start with data</p></li><li><p>Create functions to operated on that data</p></li><li><p>Eastwood can give hints on better expressions</p></li><li><p>Read source code (Clojure, libraries, open source projects)</p></li></ul></div></section>
+<section id="tips_2"><h2>Tips</h2><div class="ulist"><ul><li><p>Most problems can be solved with a function</p></li><li><p>Scientific method:</p><div class="ulist"><ul><li><p>Think of things that could possibly be wrong</p></li><li><p>Isolate a small test case</p></li><li><p>Test one hypothesis at a time</p></li></ul></div></li><li><p>Finding Clojure libraries <a href="https://www.clojure-toolbox.com/" class="bare">https://www.clojure-toolbox.com/</a></p></li></ul></div></section>
+<section id="workflow"><h2>Workflow</h2><div class="ulist"><ul><li><p>Editor + Test refresh + REPL</p></li><li><p>Reading stacktraces</p><div class="ulist"><ul><li><p>Try line 1</p></li><li><p>Scan down for your namespace</p></li></ul></div></li><li><p>Small functions</p></li><li><p>Test as you go</p></li><li><p>Print things</p></li><li><p>Test assumptions/hypothesis</p></li></ul></div></section>
+<section id="editor_customization"><h2>Editor customization</h2><div class="ulist"><ul><li><p>After you feel comfortable with Clojure</p></li><li><p>Paredit</p></li><li><p>Parinfer</p></li><li><p>Send file to REPL</p></li><li><p>Send form to REPL</p></li></ul></div></section>
+<section id="learn_the_many_clojure_functions"><h2>Learn the many Clojure functions</h2><div class="ulist"><ul><li><p>Set aside some recuring time to bite of bits of the API</p></li><li><p>Clojure word of the day: <a href="https://clojure.me" class="bare">https://clojure.me</a></p></li></ul></div></section>
+<section id="read_clojure_code"><h2>Read Clojure code</h2><div class="ulist"><ul><li><p>Clojure source</p></li><li><p>Clojure libraries</p></li><li><p>Open source projects</p></li><li><p>Check the source on anything new you use</p></li></ul></div></section>
+<section id="style_guide"><h2>Style guide</h2><div class="paragraph"><p><a href="https://github.com/bbatsov/clojure-style-guide" class="bare">https://github.com/bbatsov/clojure-style-guide</a></p></div></section>
+<section id="eastwood"><h2>Eastwood</h2><div class="paragraph"><p>Produces suggestions on how to write idiomatic Clojure</p></div>
+<div class="paragraph"><p><code>$HOME/.lein/profiles.clj</code></p></div>
+<div class="literalblock"><div class="content"><pre>{:user {:plugins [[jonase/eastwood "0.2.5"]]}}</pre></div></div>
+<div class="literalblock"><div class="content"><pre>$ lein eastwood</pre></div></div></section>
+<section id="get_help"><h2>Get help</h2><div class="ulist"><ul><li><p>REPL can answer most questions</p></li><li><p>StackOverflow.com #clojure</p></li><li><p>Create minimal examples</p></li><li><p>Clojure mailing list <a href="https://groups.google.com/forum/#!forum/clojure" class="bare">https://groups.google.com/forum/#!forum/clojure</a></p></li><li><p>ClojureVerse <a href="https://clojureverse.org" class="bare">https://clojureverse.org</a></p></li><li><p>Clojurians Slack <a href="http://clojurians.net" class="bare">http://clojurians.net</a></p></li></ul></div></section>
+<section id="practice"><h2>Practice</h2><div class="ulist"><ul><li><p>Challenges 1-4</p></li><li><p>Small projects</p></li><li><p>4Clojure problems <a href="http://www.4clojure.com" class="bare">http://www.4clojure.com</a></p></li><li><p>Project Euler <a href="https://projecteuler.net" class="bare">https://projecteuler.net</a></p></li><li><p>Katas</p></li></ul></div></section>
+<section id="thank_you" data-state="title"><h2>Thank you</h2><div class="paragraph"><p><a href="mailto:timothypratley@gmail.com">timothypratley@gmail.com</a></p></div>
+<div class="paragraph"><p><a href="https://timothypratley.blogspot.com" class="bare">https://timothypratley.blogspot.com</a></p></div>
+<div class="paragraph"><p>@timothypratley</p></div></section></div></div><script src="reveal.js/lib/js/head.min.js"></script><script src="reveal.js/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+Reveal.initialize({
+  // Display controls in the bottom right corner
+  controls: false,
+  // Display a presentation progress bar
+  progress: true,
+  // Set a per-slide timing for speaker notes, null means none
+  defaultTiming: null,
+  // Display the page number of the current slide
+  slideNumber: false,
+  // Push each slide change to the browser history
+  history: true,
+  // Enable keyboard shortcuts for navigation
+  keyboard: true,
+  // Enable the slide overview mode
+  overview: true,
+  // Vertical centering of slides
+  center: false,
+  // Enables touch navigation on devices with touch input
+  touch: true,
+  // Loop the presentation
+  loop: false,
+  // Change the presentation direction to be RTL
+  rtl: false,
+  // Randomizes the order of slides each time the presentation loads
+  shuffle: false,
+  // Turns fragments on and off globally
+  fragments: true,
+  // Flags if the presentation is running in an embedded mode,
+  // i.e. contained within a limited portion of the screen
+  embedded: false,
+  // Flags if we should show a help overlay when the questionmark
+  // key is pressed
+  help: true,
+  // Flags if speaker notes should be visible to all viewers
+  showNotes: false,
+  // Global override for autolaying embedded media (video/audio/iframe)
+  // - null: Media will only autoplay if data-autoplay is present
+  // - true: All media will autoplay, regardless of individual setting
+  // - false: No media will autoplay, regardless of individual setting
+  autoPlayMedia: null,
+  // Number of milliseconds between automatically proceeding to the
+  // next slide, disabled when set to 0, this value can be overwritten
+  // by using a data-autoslide attribute on your slides
+  autoSlide: 0,
+  // Stop auto-sliding after user input
+  autoSlideStoppable: true,
+  // Enable slide navigation via mouse wheel
+  mouseWheel: false,
+  // Hides the address bar on mobile devices
+  hideAddressBar: true,
+  // Opens links in an iframe preview overlay
+  previewLinks: false,
+  // Theme (e.g., beige, black, league, night, serif, simple, sky, solarized, white)
+  // NOTE setting the theme in the config no longer works in reveal.js 3.x
+  //theme: Reveal.getQueryHash().theme || 'simple',
+  // Transition style (e.g., none, fade, slide, convex, concave, zoom)
+  transition: Reveal.getQueryHash().transition || 'none',
+  // Transition speed (e.g., default, fast, slow)
+  transitionSpeed: 'default',
+  // Transition style for full page slide backgrounds (e.g., none, fade, slide, convex, concave, zoom)
+  backgroundTransition: 'fade',
+  // Number of slides away from the current that are visible
+  viewDistance: 3,
+  // Parallax background image (e.g., "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'")
+  parallaxBackgroundImage: '',
+  // Parallax background size in CSS syntax (e.g., "2100px 900px")
+  parallaxBackgroundSize: '',
+
+  // The "normal" size of the presentation, aspect ratio will be preserved
+  // when the presentation is scaled to fit different resolutions. Can be
+  // specified using percentage units.
+  width: 960,
+  height: 700,
+
+  // Factor of the display size that should remain empty around the content
+  margin: 0.1,
+
+  // Bounds for smallest/largest possible scale to apply to content
+  minScale: 0.2,
+  maxScale: 1.5,
+
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+      { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      
+      { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+      { src: 'reveal.js/plugin/notes/notes.js', async: true }
+  ]
+});</script></body></html>
